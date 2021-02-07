@@ -1,0 +1,36 @@
+[
+  {
+    "path": "posts/2021-02-07-some-previous-work-with-data/",
+    "title": "Some previous work with data!",
+    "description": "Linear regression analysis performed for ESM206 Final",
+    "author": [
+      {
+        "name": "Mariano Viz",
+        "url": {}
+      }
+    ],
+    "date": "2021-02-07",
+    "categories": [],
+    "contents": "\nSummary\nIn this report, I explore the relationship between sea turtle carapace length and width by visualizing the data and performing linear regression to quantitative describe this relationship. Then, I statistically compare the carapace lengths between green and loggerhead turtles. For this comparison I perform a two-sample t-tests (significance level (\\(\\alpha\\)) of 0.05). Lastly, I explore the association between species (green and loggerhead) and the occurrence of burrowing barnacles through a chi-square test.\n\n\n\n1. Relationship between sea turtle carapace length and width\nExploratory visualization\n\n\n\nLinear regression: quantitative description of the relationship between sea turtle carapace length and width\nThere is a linear relationship between sea turtles’ carapace length (cm) and width (cm). Linear model summary: \\(\\beta\\)1 = 0.86 cm cm-1, p < 0.001, R2 = 0.93, Pearson’s r = 0.97).\nThis summary shows that, on average, we expect carapace width to increase by 0.86 centimeter for each one centimeter increase in length. At the same time, the R2 shows that 93.16% of the variance in carapace width is predictable from the length. Carapace length and width are strongly, and significantly, positively correlated (Pearson’s r = 0.97, p < 0.001). Diagnostic plots (not included) show normally distributed and homoscedastic residuals.\n2. Comparison of carapace lengths between green and loggerhead turtles\nExploratory visualization of distribution\n\n\n\nBell-shaped histogram reflecting a normal distribution (slightly positive skew for both green and loggerhead turtles). This normal distribution is also shown by the quantile-quantile plot with a nearly linear relationship.\nTest selection: statistically compare carapace lengths for green and loggerhead turtles\nFor comparing the carapace lengths for green and loggerhead turtles I will perform a 2-sample t-test. With this test we can compare the means of the two groups and know the probability of having obtained sample means at least this different if they were drawn from populations with the same mean (p-value). The selection of this test is based on the fact that thanks to the histograms and quantile-quantile plots we can see that we satisfy the assumptions about distribution, where carapace lengths for green and loggerhead turtles follow a relatively normal distribution (bell-shaped histogram and quantile-quantile plot with an almost linear relationship). In case of not satisfying this assumption, we could use a rank-based alternative (Mann-Whitney U test).\n2-Sample T-Test\n\n\n\nOn average, carapace length of green turtles is slightly greater than that of loggerhead turtles (92.64 \\(\\pm\\) 15.78 and 89.91 \\(\\pm\\) 11.44 cm, respectively; mean \\(\\pm\\) 1 standard deviation). The absolute difference in means is 2.73cm (a 2.98% difference). The effect size is negligible (Cohen’s d = 0.19) and the difference in means (significance level (\\(\\alpha\\)) of 0.05) is not significant (Welch two-sample t-test: t(244.17) = 1.65, p = 9.98e-02).\n3. Comparison of the the occurrence of burrowing barnacles on green versus loggerhead turtles.\nContingency table containing the counts and proportions of each species with and without burrowing barnacles observed\nTable 1. Counts and proportions of green and loggerhead turtles with (Yes) and without (No) burrowing barnacles. Data: Heithaus & Thomson (2019)\n\n\nSpecies\n\n\nNo\n\n\nYes\n\n\ngreen\n\n\n87% (164)\n\n\n13% (24)\n\n\nloggerhead\n\n\n69% (66)\n\n\n31% (29)\n\n\nChi-square test for assessing associationn between species (green and loggerhead) and the occurrence of burrowing barnacles\n\n\n\nFor green turtles, burrowing barnacles were present in 24 individuals and absent in 164. For loggerhead turtles, the presence/absence of burrowing barnacles was 29 and 66 respectively. There is a significant association between species (green or loggerhead) and presence/absence of burrowing barnacles. In other words, species and occurrence of burrowing barnacles are non-independent (\\(\\chi\\)2(1) = 11.94, p = 5.5e-04).\nCitation\nHeithaus, M. and J. Thomson. 2019. Marine turtles captured during haphazard at-sea surveys in Shark Bay, Australia from February 2008 to December 2013 ver 4. Environmental Data Initiative. https://doi.org/10.6073/pasta/7696e20214fbf84f25d664ff7dc8050c\n\n\n\n",
+    "preview": "posts/2021-02-07-some-previous-work-with-data/some-previous-work-with-data_files/figure-html5/unnamed-chunk-2-1.png",
+    "last_modified": "2021-02-07T18:41:13-03:00",
+    "input_file": {}
+  },
+  {
+    "path": "posts/2021-02-07-welcome/",
+    "title": "Welcome!",
+    "description": "Welcome to my website :)",
+    "author": [
+      {
+        "name": "Mariano Viz",
+        "url": {}
+      }
+    ],
+    "date": "2021-02-07",
+    "categories": [],
+    "contents": "\n\n\n\n",
+    "preview": {},
+    "last_modified": "2021-02-07T18:19:18-03:00",
+    "input_file": {}
+  }
+]

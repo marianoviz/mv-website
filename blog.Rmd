@@ -1,0 +1,8 @@
+---
+title: "Blog"  # any name you want here
+listing: posts # do this exactly
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```

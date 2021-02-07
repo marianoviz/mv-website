@@ -1,0 +1,61 @@
+---
+title: CV
+name: Mariano
+surname: Viz
+position: "Graduate Student"
+address: "Bren School of Environmental Science & Management"
+phone: +61 473 868 303
+email: "mviz@bren.ucsb.edu"
+github: marianoviz
+linkedin: www.linkedin.com/in/marianoviz
+date: "`r format(Sys.time(), '%B %Y')`"
+aboutme: "I am a first-year master’s student deeply interested in the future of food systems and the environmental challenges posed by the increasing global demand for animal protein"
+output: 
+  vitae::markdowncv:
+    theme: kjhealy
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+library(vitae)
+```
+
+
+
+## Education
+
+```{r}
+library(tibble)
+tribble(
+  ~ Degree, ~ Year, ~ Institution, ~ Where,
+  "Santa Barbara, CA", "2020-22", "Bren School of Environmental Science & Management", "Master of Environmental Science and Management",
+  "Buenos Aires, Argentina", "2014", "National University of La Plata (UNLP)", "Doctor of Veterinary Medicine",
+  "Buenos Aires, Argentina", "2017", "Latin American Faculty of Social Sciences -FLACSO-", "Specialist Degree in Human Development",
+  "Buenos Aires, Argentina", "2017", "Latin American Council of Social Sciences -CLACSO-", "Higher Diploma in Public Policies for Equality") %>% 
+  detailed_entries(Degree, Year, Institution, Where)
+```
+
+## Food Systems & Animal Production Experience
+
+```{r}
+
+library(tibble)
+tribble(
+  ~ Degree, ~ Year, ~ Institution, ~ Where,
+  "Self-Employed, CA", "2014-18", "Buenos Aires, Argentina", "Rural Veterinarian",
+  "Dept. of Rural Development (UNLP)", "2016-18", "Buenos Aires, Argentina", "Research Fellow") %>% 
+  detailed_entries(Degree, Year, Institution, Where)
+```
+
+## Skills & Affiliations
+
+**Computer:** Microsoft Office Suite (Word, Excel, PowerPoint), Google Suite, RStudio, GIS (Winter 2021)
+
+
+**Languages:** Spanish (Native), English (Advanced Working Proficiency; TOEFL 109/120)
+
+**Gap-year Travel (3/18–8/19):** Europe (England, Spain, France), Southeast Asia (Vietnam, Cambodia, Laos,
+Thailand, Malaysia, Singapore, Indonesia), Australia
+
+**Professional Affiliations:** Member of the Interdisciplinary Group for the Development of Family Farming
+(GIDAF); Associate Member Wildlife Health Australia, Latin American Fisheries Fellowship.

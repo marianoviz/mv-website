@@ -3,18 +3,18 @@ title: "Mariano Viz"
 image: "mv.jpg"
 links:
   - label: LinkedIn
-    url: "https://linkedin.com/"
+    url: "https://linkedin.com/in/marianoviz"
   - label: Twitter
     url: "https://twitter.com/"
   - label: GitHub
-    url: "https://github.com/"
+    url: "https://github.com/marianoviz"
   - label: Email
-    url: "mailto:email@email.com"
+    url: "mailto:mviz@bren.ucsb.edu"
 output:
   postcards::jolla
 site: distill::distill_website
 ---
  
-I am a classically trained data scientist living in the San Francisco Bay Area. 
-Currently I work on the Oculus team at Facebook. I love talking about baseball, 
-true crime podcasts, and causal inference.
+I am a first-year master’s student deeply interested in the future of food systems and the environmental challenges posed by the increasing global demand for animal protein. I am passionate about imagining sustainable food production alternatives and their potential role in the future of the world's food supply.
+
+If this also sounds interesting to you, then let’s connect and share some ideas!

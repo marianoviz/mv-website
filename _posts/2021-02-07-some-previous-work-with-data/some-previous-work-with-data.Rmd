@@ -1,0 +1,221 @@
+---
+title: "Some previous work with data!"
+description: |
+  Linear regression analysis performed for ESM206 Final
+author:
+  - name: Mariano Viz
+    url: {}
+date: 02-07-2021
+output:
+  distill::distill_article:
+    self_contained: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+
+library(here)
+library(tidyverse)
+library(effsize)
+library(broom)
+library(kableExtra)
+library(janitor)
+
+```
+
+## Summary
+In this report, I explore the relationship between sea turtle carapace length and width by visualizing the data and performing linear regression to quantitative describe this relationship. Then, I statistically compare the carapace lengths between green and loggerhead turtles. For this comparison I perform a two-sample t-tests (significance level ($\alpha$) of 0.05). Lastly, I explore the association between species (green and loggerhead) and the occurrence of burrowing barnacles through a chi-square test.
+
+```{r}
+#Read in data
+sea_turtles <- read_csv("sharkbay_sea_turtles.csv") 
+
+
+```
+
+
+## 1. Relationship between sea turtle carapace length and width
+
+### Exploratory visualization
+
+```{r}
+#Data Viz showing the relationship between carapace length and width
+
+ggplot(data = sea_turtles, aes(x = length, y = width)) + 
+  geom_point(aes(color = species), alpha = 0.8)+
+  scale_color_manual(values = c("palegreen4","orange1"))+
+   geom_smooth(method = "lm",
+              color = "black",
+              size = 0.5,
+              fill = "gray10",
+              alpha = 0.1) +
+  theme_minimal()+
+  ggpubr::stat_regline_equation(label.x = 43, label.y = 100)+
+    labs(x = "Carapace length (cm)",
+         y = "Carapace width (cm)") 
+
+
+
+```
+
+
+### Linear regression: quantitative description of the relationship between sea turtle carapace length and width
+
+```{r include = FALSE}
+# Linear regression:
+sea_turtle_lm <- lm(width ~ length, data = sea_turtles)
+summary(sea_turtle_lm)
+
+
+#Model diagnostics:
+plot(sea_turtle_lm)
+#Normally distributed and homoscedastic residuals
+
+# Tidy versions of the model output for in-line referencing:
+sea_turtle_lm_tidy <- tidy(sea_turtle_lm)
+sea_turtle_lm_glance <- glance(sea_turtle_lm)
+
+#R^2 * 100 (for in-referencing as a percent):
+rsq_perc <- sea_turtle_lm_glance$r.squared*100
+
+# Pearson's r correlation:
+sea_turtle_cor <- cor.test(sea_turtles$width, sea_turtles$length)
+
+# Tidy versions of correlation output for in-line referencing::
+sea_turtle_cor_tidy <- tidy(sea_turtle_cor)
+
+
+```
+
+
+There is a linear relationship between sea turtles' carapace length (cm) and width (cm). Linear model summary: $\beta$~1~ = `r round(sea_turtle_lm_tidy$estimate[2], 2)` cm cm^-1^, p < 0.001, R^2^ = `r round(sea_turtle_lm_glance$r.squared,2)`, Pearson's *r* = `r round(sea_turtle_cor_tidy$estimate,2)`). 
+
+This summary shows that, on average, we expect carapace width to increase by `r round(sea_turtle_lm_tidy$estimate[2], 2)` centimeter for each one centimeter increase in length. At the same time, the R^2^ shows that `r round(rsq_perc[1], 2)`% of the variance in carapace width is predictable from the length. Carapace length and width are strongly, and significantly, positively correlated (Pearson's *r* = `r round(sea_turtle_cor_tidy$estimate,2)`, p < 0.001). Diagnostic plots (not included) show normally distributed and homoscedastic residuals.
+
+
+## 2. Comparison of carapace lengths between green and loggerhead turtles
+
+### Exploratory visualization of distribution
+
+```{r}
+
+#Distribution of carapace lengths for green and loggerhead turtles: exploratory histograms and QQ-plots
+
+sea_turtles_na <- sea_turtles %>% 
+  filter(!is.na(length)) #removed one observation with an NA value on length
+
+ggplot(data = sea_turtles_na, aes(x = length)) +
+  geom_histogram(aes(fill = species))+
+  scale_fill_manual(values = c("palegreen4","orange1"))+
+  facet_wrap(~species)
+
+ggplot(data = sea_turtles_na, aes(sample = length)) +
+  geom_qq(aes(color = species))+
+  scale_color_manual(values = c("palegreen4","orange1"))+
+  facet_wrap(~species)
+
+#Distributions of carapace lengths for green and loggerhead turtles are relatively normal and symmetric (bell-shaped histogram and quantile-quantile plot with an almost linear relationship). 
+
+```
+
+
+Bell-shaped histogram reflecting a normal distribution (slightly positive skew for both green and loggerhead turtles). This normal distribution is also shown by the quantile-quantile plot with a nearly linear relationship.
+
+
+
+### Test selection: statistically compare carapace lengths for green and loggerhead turtles
+
+For comparing the carapace lengths for green and loggerhead turtles I will perform a 2-sample t-test. With this test we can compare the means of the two groups and know the probability of having obtained sample means at least this different if they were drawn from populations with the same mean (p-value). The selection of this test is based on the fact that thanks to the histograms and quantile-quantile plots we can see that we satisfy the assumptions about distribution, where carapace lengths for green and loggerhead turtles follow a relatively normal distribution (bell-shaped histogram and quantile-quantile plot with an almost linear relationship). In case of not satisfying this assumption, we could use a rank-based alternative (Mann-Whitney U test).
+
+
+### 2-Sample T-Test
+
+```{r}
+#2-sample t-test:
+
+
+
+#T-Test
+green_length <- sea_turtles_na %>% 
+  filter(species == "green") %>% 
+  pull(length)
+
+logger_length <- sea_turtles_na %>% 
+  filter(species == "loggerhead") %>% 
+  pull(length)
+
+species_lenght_ttest <- t.test(green_length, logger_length)
+
+#Tidy T-test values
+species_lenght_ttest_tidy <- tidy(species_lenght_ttest)
+
+#Statistics
+green_mean <- mean(green_length)
+logger_mean <- mean(logger_length)
+green_sd <- sd(green_length)
+logger_sd <- sd(logger_length)
+
+#Effect size (Cohen's d)
+species_lenght_effsize <- cohen.d(green_length, logger_length)
+
+```
+
+On average, carapace length of green turtles is slightly greater than that of loggerhead turtles (`r round(green_mean, 2)` $\pm$ `r round(green_sd, 2)` and `r round(logger_mean, 2)` $\pm$ `r round(logger_sd, 2)` cm, respectively; mean $\pm$ 1 standard deviation). The absolute difference in means is `r round(green_mean, 2) - round(logger_mean, 2)`cm (a `r round((green_mean - logger_mean)/((green_mean + logger_mean)/2)*100, 2)`% difference). 
+The effect size is negligible (Cohen's *d* = `r round(species_lenght_effsize$estimate, 2)`) and the difference in means (significance level ($\alpha$) of 0.05) is not significant (Welch two-sample t-test: t(`r round(species_lenght_ttest_tidy$parameter, 2)`) = `r round(species_lenght_ttest_tidy$statistic, 2)`, p = `r format(species_lenght_ttest_tidy$p.value, scientific = TRUE, digits = 3)`).
+
+
+
+
+## 3. Comparison of the the occurrence of burrowing barnacles on green versus loggerhead turtles.
+
+
+### Contingency table containing the counts and proportions of each species with and without burrowing barnacles observed
+
+
+**Table 1.** Counts and proportions of green and loggerhead turtles with (Yes) and without (No) burrowing barnacles. Data: Heithaus & Thomson (2019)
+
+```{r}
+#Create a finalized table showing counts and proportions
+
+sea_turtle_counts <- sea_turtles %>% 
+  tabyl(species, burr)
+
+sea_turtle_counts_ft <- sea_turtle_counts %>% 
+  adorn_percentages() %>% 
+  adorn_pct_formatting(digits = 0) %>%
+  adorn_ns() %>%
+  kable(col.names = c("Species", "No", "Yes")) %>% 
+  kable_styling(bootstrap_options = "striped")
+
+sea_turtle_counts_ft
+
+
+
+
+```
+
+
+### Chi-square test for assessing associationn between species (green and loggerhead) and the occurrence of burrowing barnacles
+```{r}
+#Convert the counts to a contingency table 
+sea_turtle_counts_ct <- sea_turtle_counts %>% 
+  column_to_rownames(var = "species")
+
+
+#Perform a chi-square test  
+sea_turtle_x2 <-chisq.test(sea_turtle_counts_ct)
+
+#Use tidy() to get the outputs of the chi-square test in tidy format for in-line referencing
+sea_turtle_x2_tidy <- tidy(sea_turtle_x2)
+
+
+```
+For green turtles, burrowing barnacles were present in `r sea_turtle_counts[1,3]` individuals and absent in `r sea_turtle_counts[1,2]`. For loggerhead turtles, the presence/absence of burrowing barnacles was `r sea_turtle_counts[2,3]` and `r sea_turtle_counts[2,2]` respectively. There is a significant association between species (green or loggerhead) and presence/absence of burrowing barnacles. In other words, species and occurrence of burrowing barnacles are non-independent ($\chi$^2^(`r sea_turtle_x2_tidy$parameter`) = `r round(sea_turtle_x2_tidy$statistic, 2)`, *p* = `r format(sea_turtle_x2_tidy$p.value, scientific = TRUE, digits = 3)`).
+
+
+## Citation
+Heithaus, M. and J. Thomson. 2019. Marine turtles captured during haphazard at-sea surveys in Shark Bay, Australia from February 2008 to December 2013 ver 4. Environmental Data Initiative. https://doi.org/10.6073/pasta/7696e20214fbf84f25d664ff7dc8050c
+
+
+
+
