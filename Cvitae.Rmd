@@ -12,7 +12,7 @@ date: "`r format(Sys.time(), '%B %Y')`"
 aboutme: "I am a first-year master’s student deeply interested in the future of food systems and the environmental challenges posed by the increasing global demand for animal protein"
 output: 
   vitae::markdowncv:
-    theme: kjhealy
+    theme: davewhipp
 ---
 
 ```{r setup, include=FALSE}
