@@ -8,7 +8,7 @@ navbar:
     - text: "Home"
       href: index.html
     - text: "Resume"
-      href: CVitae.html
+      href: CV.html
     - text: "Blog"      
       href: blog.html
     - text: "Professional Bio"      
