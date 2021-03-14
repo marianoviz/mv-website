@@ -1,0 +1,148 @@
+---
+title: "Text analysis"
+description: |
+  Here, I conduct a text analysis of F. Scott Fitzgerald's book *The Great Gatsby*.
+author:
+  - name: Mariano Viz
+    url: {}
+date: 03-14-2021
+output:
+  distill::distill_article:
+    self_contained: false
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+
+library(tidyverse)
+library(here)
+library(tidytext)
+library(textdata)
+library(pdftools)
+library(ggwordcloud)
+
+```
+
+## Summary
+In this report, I conduct a text analysis of F. Scott Fitzgerald's book *The Great Gatsby*. First, I wrangle the data to structure the text in tidy format. Next, I analyze the most frequently used words by F. Scott Fitzgerald and make plots showing the top 5 most used words by chapter and the top 100 most used words in the book. Finally, I perform a sentiment analysis using the NRC lexicon and show the results for each chapter in a bar plot. Edition used in the analysis: Fitzgerald, F. S. (2014). The great Gatsby. General Press.
+
+## Tidy text format
+
+```{r}
+#Read in pdf
+great_gatsby <- pdf_text("The Great Gatsby.pdf")
+
+#Get it into a data frame and tidy format:
+gatsby_df <- data.frame(great_gatsby) %>% 
+  mutate(text_tidy = str_split(great_gatsby, pattern = '\\n')) %>% #split by line
+  unnest(text_tidy) %>% #each individual line in a row
+  mutate(text_tidy = str_trim(text_tidy)) %>% #get rid of lead/tail whitespace
+  slice(-(1:41)) %>%  #get rid of text before chapter 1
+  mutate(chapter = case_when(str_detect(text_tidy, pattern = "Chapter") ~ text_tidy,
+                             TRUE ~ NA_character_)) %>% #split by chapter (grouping variable) 
+  fill(chapter) %>% #fill NA values in chapter col 
+  separate(col = chapter, into = c("chap", "num"), sep = " ") %>%  #separate chapter number
+  mutate(chapter = as.numeric(as.character(num))) #numbers to chapter col in class numeric
+
+#Get tokens and remove stop_words:
+gatsby_tok_nosw <- gatsby_df %>% 
+  unnest_tokens(word, text_tidy) %>% #unnest tokens
+  dplyr::select(-c(great_gatsby, chap, num)) %>% #get rid of cols except for 'chapter' and 'word'
+  mutate(word = str_replace(word, pattern = "’", replacement = "'")) %>% #replace ’ with ' (in stop_word words appear with ' instead of ’ -e.g.: don't != don’t)
+  anti_join(stop_words) #remove stop_words
+
+```
+
+
+
+## Most frequently used words in *The Great Gatsby*
+
+```{r}
+#Top 5 words by chapter:
+gatsby_counts <- gatsby_tok_nosw %>% 
+  count(chapter, word)
+gatsby_top5 <- gatsby_counts %>% 
+  group_by(chapter) %>% 
+  arrange(-n) %>% 
+  slice(1:5)
+
+#Plot:
+chapter.labs<-c("Chapter 1", "Chapter 2", "Chapter 3", "Chapter 4", "Chapter 5", "Chapter 6", "Chapter 7", "Chapter 8", "Chapter 9")
+names(chapter.labs)<-c(1, 2, 3, 4, 5, 6, 7, 8, 9)
+
+ggplot(data = gatsby_top5, aes(x = word, y = n)) +
+  geom_col(fill = "orangered1", alpha = 0.65) +
+  facet_wrap(~chapter, scales = "free", labeller = labeller(chapter=chapter.labs)) +
+  coord_flip() +
+  theme_minimal()+
+  labs(x = "word",
+       y = "count")
+
+```
+
+**Figure 1.** Top 5 most frequently used words by chapter (1-9). Orange bars indicate total word counts for each chapter.
+
+
+
+
+```{r}
+#Top 100 most used words:
+gatsby_top100 <- gatsby_tok_nosw %>% 
+  count(word) %>% 
+  arrange(-n) %>% 
+  slice(1:100)
+
+#Word cloud plot (top 100 in the book)
+gatsby_top100_wcloud <- ggplot(data = gatsby_top100, aes(label = word)) +
+  geom_text_wordcloud(aes(color = n, size = n), shape = "circle") +
+  scale_size_area(max_size = 6) +
+  scale_color_gradientn(colors = c("coral","orange1","goldenrod2")) +
+  theme_minimal()
+
+gatsby_top100_wcloud
+
+```
+
+**Figure 2.** Top 100 most used words in *The Great Gatsby*. Size and color of the words in the plot reflect the frequency with which they appear in the original text.
+
+
+## Sentiment analysis
+
+
+
+```{r, results='hide'}
+#Sentiment analysis (NRC lexicon)
+get_sentiments(lexicon = "nrc")
+
+garsby_sent_nrc <- gatsby_tok_nosw %>% 
+  inner_join(get_sentiments("nrc"))
+
+
+
+```
+
+
+```{r}
+#Sentiment analysis plot:
+gatsby_nrc_counts <- garsby_sent_nrc %>% 
+  count(chapter, sentiment)
+
+ggplot(data = gatsby_nrc_counts, aes(x = sentiment, y = n)) +
+  geom_col(fill = "orangered1", alpha = 0.65) +
+  facet_wrap(~chapter, labeller = labeller(chapter=chapter.labs))+
+  coord_flip()+
+  theme_minimal()+
+  labs(x = "sentiment",
+       y = "count")
+
+```
+
+**Figure 3.** Categorization of words by chapter based on the NRC lexicon. Orange bars show counts of words per chapter categorized by the NRC lexicon into the categories: positive, negative, anger, anticipation, disgust, fear, joy, sadness, surprise, and trust. 
+
+**Citation for NRC lexicon**: Crowdsourcing a Word-Emotion Association Lexicon, Saif Mohammad and Peter Turney, Computational Intelligence, 29 (3), 436-465, 2013.
+
+
+
+
+

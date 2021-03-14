@@ -42,8 +42,13 @@ tribble(
 library(tibble)
 tribble(
   ~ Degree, ~ Year, ~ Institution, ~ Where,
-  "Self-Employed, CA", "2014-18", "Buenos Aires, Argentina", "Rural Veterinarian",
-  "Dept. of Rural Development (UNLP)", "2016-18", "Buenos Aires, Argentina", "Research Fellow") %>% 
+  "Bowral Veterinary Hospital", "2019-20", "NSW, Australia", "Wildlife and Small Animal Veterinarian",
+  "Self-Employed", "2014-18", "Buenos Aires, Argentina", "Rural Veterinarian",
+  "Dept. of Rural Development (UNLP)", "2016-18", "Buenos Aires, Argentina", "Research Fellow",
+  "Dept. of Animal Production (UNLP)", "2013-15", "Buenos Aires, Argentina", "Teaching Assistant",
+  "Institute of Animal Reproduction of Uruguay", "2014", "Montevideo Uruguay", "Veterinary Intern"
+  
+  ) %>% 
   detailed_entries(Degree, Year, Institution, Where)
 ```
 

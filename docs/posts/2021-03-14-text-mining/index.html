@@ -20,19 +20,19 @@
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
-code.sourceCode > span { display: inline-block; line-height: 1.25; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-code.sourceCode > span:empty { height: 1.2em; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -52,7 +52,7 @@ pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-le
 div.sourceCode
   {   }
 @media screen {
-code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ad0000; } /* Alert */
 code span.an { color: #5e5e5e; } /* Annotation */
@@ -86,38 +86,38 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </style>
 
   <!--radix_placeholder_meta_tags-->
-<title>Mariano Viz: Welcome!</title>
+<title>Mariano Viz: Text analysis</title>
 
-<meta property="description" itemprop="description" content="Welcome to my website :)"/>
+<meta property="description" itemprop="description" content="Here, I conduct a text analysis of F. Scott Fitzgerald&#39;s book *The Great Gatsby*."/>
 
 
 <!--  https://schema.org/Article -->
-<meta property="article:published" itemprop="datePublished" content="2021-02-07"/>
-<meta property="article:created" itemprop="dateCreated" content="2021-02-07"/>
+<meta property="article:published" itemprop="datePublished" content="2021-03-14"/>
+<meta property="article:created" itemprop="dateCreated" content="2021-03-14"/>
 <meta name="article:author" content="Mariano Viz"/>
 
 <!--  https://developers.facebook.com/docs/sharing/webmasters#markup -->
-<meta property="og:title" content="Mariano Viz: Welcome!"/>
+<meta property="og:title" content="Mariano Viz: Text analysis"/>
 <meta property="og:type" content="article"/>
-<meta property="og:description" content="Welcome to my website :)"/>
+<meta property="og:description" content="Here, I conduct a text analysis of F. Scott Fitzgerald&#39;s book *The Great Gatsby*."/>
 <meta property="og:locale" content="en_US"/>
 <meta property="og:site_name" content="Mariano Viz"/>
 
 <!--  https://dev.twitter.com/cards/types/summary -->
 <meta property="twitter:card" content="summary"/>
-<meta property="twitter:title" content="Mariano Viz: Welcome!"/>
-<meta property="twitter:description" content="Welcome to my website :)"/>
+<meta property="twitter:title" content="Mariano Viz: Text analysis"/>
+<meta property="twitter:description" content="Here, I conduct a text analysis of F. Scott Fitzgerald&#39;s book *The Great Gatsby*."/>
 
 <!--/radix_placeholder_meta_tags-->
   <!--radix_placeholder_rmarkdown_metadata-->
 
 <script type="text/json" id="radix-rmarkdown-metadata">
-{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","description","author","date","output"]}},"value":[{"type":"character","attributes":{},"value":["Welcome!"]},{"type":"character","attributes":{},"value":["Welcome to my website :)"]},{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name"]}},"value":[{"type":"character","attributes":{},"value":["Mariano Viz"]}]}]},{"type":"character","attributes":{},"value":["02-07-2021"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["distill::distill_article"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["self_contained"]}},"value":[{"type":"logical","attributes":{},"value":[false]}]}]}]}
+{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","description","author","date","output"]}},"value":[{"type":"character","attributes":{},"value":["Text analysis"]},{"type":"character","attributes":{},"value":["Here, I conduct a text analysis of F. Scott Fitzgerald's book *The Great Gatsby*."]},{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","url"]}},"value":[{"type":"character","attributes":{},"value":["Mariano Viz"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":[]}},"value":[]}]}]},{"type":"character","attributes":{},"value":["03-14-2021"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["distill::distill_article"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["self_contained"]}},"value":[{"type":"logical","attributes":{},"value":[false]}]}]}]}
 </script>
 <!--/radix_placeholder_rmarkdown_metadata-->
   
   <script type="text/json" id="radix-resource-manifest">
-  {"type":"character","attributes":{},"value":["welcome_files/anchor-4.2.2/anchor.min.js","welcome_files/bowser-1.9.3/bowser.min.js","welcome_files/distill-2.2.21/template.v2.js","welcome_files/jquery-1.11.3/jquery.min.js","welcome_files/popper-2.6.0/popper.min.js","welcome_files/tippy-6.2.7/tippy-bundle.umd.min.js","welcome_files/tippy-6.2.7/tippy-light-border.css","welcome_files/tippy-6.2.7/tippy.css","welcome_files/tippy-6.2.7/tippy.umd.min.js","welcome_files/webcomponents-2.0.0/webcomponents.js","Welcome!_files/anchor-4.2.2/anchor.min.js","Welcome!_files/bowser-1.9.3/bowser.min.js","Welcome!_files/distill-2.2.21/template.v2.js","Welcome!_files/jquery-1.11.3/jquery.min.js","Welcome!_files/popper-2.6.0/popper.min.js","Welcome!_files/tippy-6.2.7/tippy-bundle.umd.min.js","Welcome!_files/tippy-6.2.7/tippy-light-border.css","Welcome!_files/tippy-6.2.7/tippy.css","Welcome!_files/tippy-6.2.7/tippy.umd.min.js","Welcome!_files/webcomponents-2.0.0/webcomponents.js","welcome.html"]}
+  {"type":"character","attributes":{},"value":["text-mining_files/figure-html5/unnamed-chunk-2-1.png","text-mining_files/figure-html5/unnamed-chunk-3-1.png","text-mining_files/figure-html5/unnamed-chunk-5-1.png","The Great Gatsby.pdf"]}
   </script>
   <!--radix_placeholder_navigation_in_header-->
 <meta name="distill:offset" content="../.."/>
@@ -2041,6 +2041,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <!--/radix_placeholder_distill-->
+  <script src="../../site_libs/header-attrs-2.7/header-attrs.js"></script>
   <script src="../../site_libs/jquery-1.11.3/jquery.min.js"></script>
   <script src="../../site_libs/popper-2.6.0/popper.min.js"></script>
   <link href="../../site_libs/tippy-6.2.7/tippy.css" rel="stylesheet" />
@@ -2061,7 +2062,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <!--radix_placeholder_front_matter-->
 
 <script id="distill-front-matter" type="text/json">
-{"title":"Welcome!","description":"Welcome to my website :)","authors":[{"author":"Mariano Viz","authorURL":"#","affiliation":"&nbsp;","affiliationURL":"#","orcidID":""}],"publishedDate":"2021-02-07T00:00:00.000+00:00","citationText":"Viz, 2021"}
+{"title":"Text analysis","description":"Here, I conduct a text analysis of F. Scott Fitzgerald's book *The Great Gatsby*.","authors":[{"author":"Mariano Viz","authorURL":{},"affiliation":"&nbsp;","affiliationURL":"#","orcidID":""}],"publishedDate":"2021-03-14T00:00:00.000+00:00","citationText":"Viz, 2021"}
 </script>
 
 <!--/radix_placeholder_front_matter-->
@@ -2075,7 +2076,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <div class="nav-right">
 <a href="../../index.html">Home</a>
 <a href="../../CV.html">Resume</a>
-<a href="../../blog.html">Blog</a>
+<a href="../../blog.html">R programming skills!</a>
 <a href="../../bio.html">Professional Bio</a>
 <a href="javascript:void(0);" class="nav-toggle">&#9776;</a>
 </div>
@@ -2086,19 +2087,126 @@ document.addEventListener('DOMContentLoaded', function() {
 <!--/radix_placeholder_site_before_body-->
 
 <div class="d-title">
-<h1>Welcome!</h1>
+<h1>Text analysis</h1>
 <!--radix_placeholder_categories-->
 <!--/radix_placeholder_categories-->
-<p><p>Welcome to my website :)</p></p>
+<p><p>Here, I conduct a text analysis of F. Scott Fitzgerald’s book <em>The Great Gatsby</em>.</p></p>
 </div>
 
 <div class="d-byline">
-  Mariano Viz  
+  Mariano Viz true 
   
-<br/>02-07-2021
+<br/>03-14-2021
 </div>
 
 <div class="d-article">
+<h2 id="summary">Summary</h2>
+<p>In this report, I conduct a text analysis of F. Scott Fitzgerald’s book <em>The Great Gatsby</em>. First, I wrangle the data to structure the text in tidy format. Next, I analyze the most frequently used words by F. Scott Fitzgerald and make plots showing the top 5 most used words by chapter and the top 100 most used words in the book. Finally, I perform a sentiment analysis using the NRC lexicon and show the results for each chapter in a bar plot. Edition used in the analysis: Fitzgerald, F. S. (2014). The great Gatsby. General Press.</p>
+<h2 id="tidy-text-format">Tidy text format</h2>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'>#Read in pdf</span>
+<span class='va'>great_gatsby</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://docs.ropensci.org/pdftools/reference/pdftools.html'>pdf_text</a></span><span class='op'>(</span><span class='st'>"The Great Gatsby.pdf"</span><span class='op'>)</span>
+
+<span class='co'>#Get it into a data frame and tidy format:</span>
+<span class='va'>gatsby_df</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span><span class='va'>great_gatsby</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'>mutate</span><span class='op'>(</span>text_tidy <span class='op'>=</span> <span class='fu'>str_split</span><span class='op'>(</span><span class='va'>great_gatsby</span>, pattern <span class='op'>=</span> <span class='st'>'\\n'</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='co'>#split by line</span>
+  <span class='fu'>unnest</span><span class='op'>(</span><span class='va'>text_tidy</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='co'>#each individual line in a row</span>
+  <span class='fu'>mutate</span><span class='op'>(</span>text_tidy <span class='op'>=</span> <span class='fu'>str_trim</span><span class='op'>(</span><span class='va'>text_tidy</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='co'>#get rid of lead/tail whitespace</span>
+  <span class='fu'>slice</span><span class='op'>(</span><span class='op'>-</span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>41</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>  <span class='co'>#get rid of text before chapter 1</span>
+  <span class='fu'>mutate</span><span class='op'>(</span>chapter <span class='op'>=</span> <span class='fu'>case_when</span><span class='op'>(</span><span class='fu'>str_detect</span><span class='op'>(</span><span class='va'>text_tidy</span>, pattern <span class='op'>=</span> <span class='st'>"Chapter"</span><span class='op'>)</span> <span class='op'>~</span> <span class='va'>text_tidy</span>,
+                             <span class='cn'>TRUE</span> <span class='op'>~</span> <span class='cn'>NA_character_</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='co'>#split by chapter (grouping variable) </span>
+  <span class='fu'>fill</span><span class='op'>(</span><span class='va'>chapter</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='co'>#fill NA values in chapter col </span>
+  <span class='fu'>separate</span><span class='op'>(</span>col <span class='op'>=</span> <span class='va'>chapter</span>, into <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"chap"</span>, <span class='st'>"num"</span><span class='op'>)</span>, sep <span class='op'>=</span> <span class='st'>" "</span><span class='op'>)</span> <span class='op'>%&gt;%</span>  <span class='co'>#separate chapter number</span>
+  <span class='fu'>mutate</span><span class='op'>(</span>chapter <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/character.html'>as.character</a></span><span class='op'>(</span><span class='va'>num</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span> <span class='co'>#numbers to chapter col in class numeric</span>
+
+<span class='co'>#Get tokens and remove stop_words:</span>
+<span class='va'>gatsby_tok_nosw</span> <span class='op'>&lt;-</span> <span class='va'>gatsby_df</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'><a href='https://rdrr.io/pkg/tidytext/man/unnest_tokens.html'>unnest_tokens</a></span><span class='op'>(</span><span class='va'>word</span>, <span class='va'>text_tidy</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='co'>#unnest tokens</span>
+  <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='op'>-</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>great_gatsby</span>, <span class='va'>chap</span>, <span class='va'>num</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='co'>#get rid of cols except for 'chapter' and 'word'</span>
+  <span class='fu'>mutate</span><span class='op'>(</span>word <span class='op'>=</span> <span class='fu'>str_replace</span><span class='op'>(</span><span class='va'>word</span>, pattern <span class='op'>=</span> <span class='st'>"’"</span>, replacement <span class='op'>=</span> <span class='st'>"'"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='co'>#replace ’ with ' (in stop_word words appear with ' instead of ’ -e.g.: don't != don’t)</span>
+  <span class='fu'>anti_join</span><span class='op'>(</span><span class='va'>stop_words</span><span class='op'>)</span> <span class='co'>#remove stop_words</span>
+</code></pre>
+</div>
+</div>
+<h2 id="most-frequently-used-words-in-the-great-gatsby">Most frequently used words in <em>The Great Gatsby</em></h2>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'>#Top 5 words by chapter:</span>
+<span class='va'>gatsby_counts</span> <span class='op'>&lt;-</span> <span class='va'>gatsby_tok_nosw</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'>count</span><span class='op'>(</span><span class='va'>chapter</span>, <span class='va'>word</span><span class='op'>)</span>
+<span class='va'>gatsby_top5</span> <span class='op'>&lt;-</span> <span class='va'>gatsby_counts</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'>group_by</span><span class='op'>(</span><span class='va'>chapter</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'>arrange</span><span class='op'>(</span><span class='op'>-</span><span class='va'>n</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'>slice</span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>5</span><span class='op'>)</span>
+
+<span class='co'>#Plot:</span>
+<span class='va'>chapter.labs</span><span class='op'>&lt;-</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Chapter 1"</span>, <span class='st'>"Chapter 2"</span>, <span class='st'>"Chapter 3"</span>, <span class='st'>"Chapter 4"</span>, <span class='st'>"Chapter 5"</span>, <span class='st'>"Chapter 6"</span>, <span class='st'>"Chapter 7"</span>, <span class='st'>"Chapter 8"</span>, <span class='st'>"Chapter 9"</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>chapter.labs</span><span class='op'>)</span><span class='op'>&lt;-</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fl'>3</span>, <span class='fl'>4</span>, <span class='fl'>5</span>, <span class='fl'>6</span>, <span class='fl'>7</span>, <span class='fl'>8</span>, <span class='fl'>9</span><span class='op'>)</span>
+
+<span class='fu'>ggplot</span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>gatsby_top5</span>, <span class='fu'>aes</span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>word</span>, y <span class='op'>=</span> <span class='va'>n</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'>geom_col</span><span class='op'>(</span>fill <span class='op'>=</span> <span class='st'>"orangered1"</span>, alpha <span class='op'>=</span> <span class='fl'>0.65</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'>facet_wrap</span><span class='op'>(</span><span class='op'>~</span><span class='va'>chapter</span>, scales <span class='op'>=</span> <span class='st'>"free"</span>, labeller <span class='op'>=</span> <span class='fu'>labeller</span><span class='op'>(</span>chapter<span class='op'>=</span><span class='va'>chapter.labs</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'>coord_flip</span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'>theme_minimal</span><span class='op'>(</span><span class='op'>)</span><span class='op'>+</span>
+  <span class='fu'>labs</span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"word"</span>,
+       y <span class='op'>=</span> <span class='st'>"count"</span><span class='op'>)</span>
+</code></pre>
+</div>
+<p><img src="text-mining_files/figure-html5/unnamed-chunk-2-1.png" width="624" /></p>
+</div>
+<p><strong>Figure 1.</strong> Top 5 most frequently used words by chapter (1-9). Orange bars indicate total word counts for each chapter.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'>#Top 100 most used words:</span>
+<span class='va'>gatsby_top100</span> <span class='op'>&lt;-</span> <span class='va'>gatsby_tok_nosw</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'>count</span><span class='op'>(</span><span class='va'>word</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'>arrange</span><span class='op'>(</span><span class='op'>-</span><span class='va'>n</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'>slice</span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>100</span><span class='op'>)</span>
+
+<span class='co'>#Word cloud plot (top 100 in the book)</span>
+<span class='va'>gatsby_top100_wcloud</span> <span class='op'>&lt;-</span> <span class='fu'>ggplot</span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>gatsby_top100</span>, <span class='fu'>aes</span><span class='op'>(</span>label <span class='op'>=</span> <span class='va'>word</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://lepennec.github.io/ggwordcloud/reference/geom_text_wordcloud.html'>geom_text_wordcloud</a></span><span class='op'>(</span><span class='fu'>aes</span><span class='op'>(</span>color <span class='op'>=</span> <span class='va'>n</span>, size <span class='op'>=</span> <span class='va'>n</span><span class='op'>)</span>, shape <span class='op'>=</span> <span class='st'>"circle"</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'>scale_size_area</span><span class='op'>(</span>max_size <span class='op'>=</span> <span class='fl'>6</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'>scale_color_gradientn</span><span class='op'>(</span>colors <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"coral"</span>,<span class='st'>"orange1"</span>,<span class='st'>"goldenrod2"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'>theme_minimal</span><span class='op'>(</span><span class='op'>)</span>
+
+<span class='va'>gatsby_top100_wcloud</span>
+</code></pre>
+</div>
+<p><img src="text-mining_files/figure-html5/unnamed-chunk-3-1.png" width="624" /></p>
+</div>
+<p><strong>Figure 2.</strong> Top 100 most used words in <em>The Great Gatsby</em>. Size and color of the words in the plot reflect the frequency with which they appear in the original text.</p>
+<h2 id="sentiment-analysis">Sentiment analysis</h2>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'>#Sentiment analysis (NRC lexicon)</span>
+<span class='fu'><a href='https://rdrr.io/pkg/tidytext/man/get_sentiments.html'>get_sentiments</a></span><span class='op'>(</span>lexicon <span class='op'>=</span> <span class='st'>"nrc"</span><span class='op'>)</span>
+
+<span class='va'>garsby_sent_nrc</span> <span class='op'>&lt;-</span> <span class='va'>gatsby_tok_nosw</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'>inner_join</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/pkg/tidytext/man/get_sentiments.html'>get_sentiments</a></span><span class='op'>(</span><span class='st'>"nrc"</span><span class='op'>)</span><span class='op'>)</span>
+</code></pre>
+</div>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'>#Sentiment analysis plot:</span>
+<span class='va'>gatsby_nrc_counts</span> <span class='op'>&lt;-</span> <span class='va'>garsby_sent_nrc</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'>count</span><span class='op'>(</span><span class='va'>chapter</span>, <span class='va'>sentiment</span><span class='op'>)</span>
+
+<span class='fu'>ggplot</span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>gatsby_nrc_counts</span>, <span class='fu'>aes</span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>sentiment</span>, y <span class='op'>=</span> <span class='va'>n</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'>geom_col</span><span class='op'>(</span>fill <span class='op'>=</span> <span class='st'>"orangered1"</span>, alpha <span class='op'>=</span> <span class='fl'>0.65</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'>facet_wrap</span><span class='op'>(</span><span class='op'>~</span><span class='va'>chapter</span>, labeller <span class='op'>=</span> <span class='fu'>labeller</span><span class='op'>(</span>chapter<span class='op'>=</span><span class='va'>chapter.labs</span><span class='op'>)</span><span class='op'>)</span><span class='op'>+</span>
+  <span class='fu'>coord_flip</span><span class='op'>(</span><span class='op'>)</span><span class='op'>+</span>
+  <span class='fu'>theme_minimal</span><span class='op'>(</span><span class='op'>)</span><span class='op'>+</span>
+  <span class='fu'>labs</span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"sentiment"</span>,
+       y <span class='op'>=</span> <span class='st'>"count"</span><span class='op'>)</span>
+</code></pre>
+</div>
+<p><img src="text-mining_files/figure-html5/unnamed-chunk-5-1.png" width="624" /></p>
+</div>
+<p><strong>Figure 3.</strong> Categorization of words by chapter based on the NRC lexicon. Orange bars show counts of words per chapter categorized by the NRC lexicon into the categories: positive, negative, anger, anticipation, disgust, fear, joy, sadness, surprise, and trust.</p>
+<p><strong>Citation for NRC lexicon</strong>: Crowdsourcing a Word-Emotion Association Lexicon, Saif Mohammad and Peter Turney, Computational Intelligence, 29 (3), 436-465, 2013.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->

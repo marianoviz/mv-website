@@ -9,7 +9,7 @@ navbar:
       href: index.html
     - text: "Resume"
       href: CV.html
-    - text: "Blog"      
+    - text: "R programming skills!"      
       href: blog.html
     - text: "Professional Bio"      
       href: bio.html

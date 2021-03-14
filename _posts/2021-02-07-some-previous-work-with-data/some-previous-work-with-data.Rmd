@@ -1,7 +1,7 @@
 ---
-title: "Some previous work with data!"
+title: "Linear regression analysis"
 description: |
-  Linear regression analysis performed for ESM206 Final
+ Here, I explore the relationship between sea turtle carapace length and width by visualizing the data and performing linear regression to quantitative describe this relationship.
 author:
   - name: Mariano Viz
     url: {}
