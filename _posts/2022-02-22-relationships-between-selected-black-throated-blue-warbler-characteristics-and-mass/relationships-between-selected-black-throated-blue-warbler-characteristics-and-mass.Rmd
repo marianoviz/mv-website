@@ -1,0 +1,232 @@
+---
+title: "Relationships Between Selected Black-throated Blue Warbler Characteristics and Mass"
+description: |
+  In this analysis, I investigated the relationships between various characteristics of black-throated blue warblers and their mass using multiple linear regression. The analysis began with exploratory visualizations, including scatterplots and beeswarm plots, to identify potential linear relationships and outliers. Then, I performed multiple linear regression to quantitatively describe the relationships between mass and other recorded features such as wing length, sex, bill dimensions, and tarsus length. Model selection was based on diagnostic plots, Adjusted R-squared, and AIC scores to ensure the best balance between model fit and complexity.
+author:
+  - name: Mariano Viz
+    url: {}
+date: 02-22-2022
+output:
+  distill::distill_article:
+    self_contained: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+
+library(here)
+library(tidyverse)
+library(GGally)
+library(naniar)
+library(stargazer)
+library(ggbeeswarm)
+```
+
+## Summary 
+In this report, I explore the relationships between selected black-throated blue warbler characteristics and mass. First, I visually explore the data. Then, I use multiple linear regression to describe the relationship. 
+
+
+
+```{r}
+#Read in data and rename missing values (-99.99) as NA
+warblers <- read_csv("bt_warblers.csv") %>% 
+  replace_with_na_all(condition = ~.x == -99.99)
+
+
+```
+
+## 1. Exploratory Visualization
+
+- Exploratory scatterplots exploring linear relationship (also useful for identifying notable outliers and having some initial thoughts about homoscedasticity)
+
+- Beeswarm plot for visualizing the relationship between bird mass and elevation of the sample plot (low, mid, or high)
+
+
+```{r}
+
+#Exploratory scatterplots: wing length versus bird mass; bill cross-section depth versus bird mass; bill culmen length versus bird mass; tarsus length versus bird mass.
+
+age_banded_labs<-c("After hatch year", "After second year", "Second year")
+names(age_banded_labs)<-c("AHY", "ASY", "SY")
+
+ggplot(data = warblers, aes(x = wing_r, y = mass)) + 
+  geom_point(aes(color = sex), alpha = 0.5) +
+  facet_wrap(~age_banded, labeller = labeller(age_banded=age_banded_labs))+
+  scale_color_manual(values = c("orange1","cyan4")) +
+  labs( y = "Mass (g)",
+        x = "Wing lenght (mm)")
+
+ggplot(data = warblers, aes(x = bill_depth, y = mass)) + 
+  geom_point(aes(color = sex), alpha = 0.5) +
+  facet_wrap(~age_banded, labeller = labeller(age_banded=age_banded_labs))+
+  scale_color_manual(values = c("orange1","cyan4")) +
+  labs( y = "Mass (g)",
+        x = "Bill cross-section depth (mm)")
+
+ggplot(data = warblers, aes(x = bill_culmen, y = mass)) + 
+  geom_point(aes(color = sex), alpha = 0.5) +
+  facet_wrap(~age_banded, labeller = labeller(age_banded=age_banded_labs))+
+  scale_color_manual(values = c("orange1","cyan4")) +
+  labs( y = "Mass (g)",
+        x = "Bill culmen length (mm)")
+
+ggplot(data = warblers, aes(x = tarsus1, y = mass)) + 
+  geom_point(aes(color = sex), alpha = 0.5) +
+  facet_wrap(~age_banded, labeller = labeller(age_banded=age_banded_labs))+
+  scale_color_manual(values = c("orange1","cyan4")) +
+  labs( y = "Mass (g)",
+        x = "Tarsus length (mm)")
+
+
+
+#Exploratory beeswarm plot:
+
+ggplot(data = warblers, aes(x = elevation, y = mass)) +
+  geom_beeswarm(aes(color = sex),
+                size = 2,
+                alpha = 0.3)+
+  geom_boxplot(fill = NA, 
+               width = 0.2, 
+               outlier.color = NA)+
+  stat_summary(fun = mean,
+               alpha = 0.7,
+               size = 0.3) +
+  facet_wrap(~age_banded, labeller = labeller(age_banded=age_banded_labs))+
+  scale_color_manual(values = c("orange1","cyan4")) +
+  theme_minimal() +
+  theme(legend.position="none")+
+  labs(x = "Elevation",
+       y = "Mass (g)") 
+
+# From this last plot we can see that there is an observation with a mass of 0 grams. I assume that this value represents an error and I decide to remove it:
+warblers_mass <- warblers %>% 
+  filter(is.na(mass)|mass != 0)
+
+```
+
+
+```{r include = FALSE}
+#Visualization with GGgally to explore relationship between all variables and actual correlation (not shown on HTML):
+
+warblers %>% 
+ggpairs(aes(color = sex))
+
+
+```
+
+
+## 2. Multiple linear regression
+
+### Exploring relationships between bird mass (dependent variable) and other recorded features (explanatory variables)
+
+
+```{r}
+#Build different models exploring different combinations of exploratory variables
+
+lm1 <- lm(mass ~ wing_r + sex, data = warblers_mass)
+
+lm2 <- lm(mass ~ wing_r + sex + age_banded, data = warblers_mass)
+
+lm3 <- lm(mass ~ wing_r + sex + age_banded + bill_depth, data = warblers_mass)
+
+lm4 <- lm(mass ~ wing_r + sex + age_banded + bill_depth + bill_culmen, data = warblers_mass)
+
+lm5 <- lm(mass ~ wing_r + sex + age_banded + bill_depth + bill_culmen + tarsus1, data = warblers_mass)
+
+# New model proposed after comparing the initial models:
+lm6 <- lm(mass ~ wing_r + sex + bill_depth + bill_culmen + tarsus1, data = warblers_mass) 
+
+
+```
+
+
+### Comparing the different models:
+
+- Observation of how the coefficients change in the different models as predictor variables change 
+
+- Assessment of model fit (Adjusted R-squared)
+
+- Diagnostic plots for exploring model assumptions (homoscedasticity and distribution of residuals and Cook's distance)
+
+- Comparison of the quality (balance: model fit / complexity) of the different models (AIC)
+
+
+```{r include = FALSE}
+
+#Comparison of the different models: 
+
+lm1
+lm2
+lm3
+lm4
+lm5
+lm6
+
+summary(lm1)
+summary(lm2)
+summary(lm3)
+summary(lm4)
+summary(lm5)
+#Adjusted R-squared increases with the addition of more predictor variables
+
+summary(lm6) #New model after examining AIC 
+
+
+plot(lm1)
+plot(lm2)
+plot(lm3)
+plot(lm4)
+plot(lm5)
+plot(lm6)
+#All: normally distributed and homoscedastic residuals 
+
+
+
+AIC(lm1)
+AIC(lm2) #Increase in AIC by the addition of age_banded as a predictor variable
+AIC(lm3)
+AIC(lm4)
+AIC(lm5)
+#lm5 has the best balance model fit/complexity (in this case, the benefits in model fit of adding the additional variables outweigh the increased complexity)
+
+#After seeing that age_banded worsen the quality of the model I decided to try a new model: lm5 without age_banded
+
+AIC(lm6) #Lowest AIC!
+
+
+```
+
+
+### Selected model outcomes  
+
+```{r, results = 'asis'}
+#Presenting model outcomes in a finalized regression table using stargazer
+
+stargazer(lm6, type = "html")
+
+```
+
+
+### Justification of the model selection
+
+Diagnostic plots for exploring model assumptions reveal normally distributed and homoscedastic residuals for all models. In the evaluated models, Adjusted R-squared (a measure of how much the variance in the dependent variable is explained by the explanatory variables in the model) increases with the addition of more predictor variables. AIC shows comparative scores reflecting the balance between the predictive capabilities of the model (model fit) and the increase in complexity due to the addition of variables. When comparing the initial models, the model with the highest number of variables (lm5) showed the best balance in model fit/complexity (i.e., the benefits in model fit of adding the additional variables outweigh the increased complexity). However, as the addition of the age_banded variable determined an increase in the AIC, I decided to try a new model (lm6) by removing this variable from the lm5 model. Showing a better balance between model fit and complexity (lower AIC), lm6 was the selected model.  
+
+
+
+### Interpretation of lm6 coefficients
+
+- Wing length coefficient (wing_r 0.071): on average, a 1 mm increase in wing length is associated with a 0.071 g increase in bird mass.
+
+- Sex coefficient (sexM -1.038): on average, if everything else is fixed, we expect males to have a 1.038 g less mass than females (reference level). 
+
+- Bill cross-section depth coefficient (bill_depth 0.112): on average, a 1 mm increase in bill cross-section depth is associated with a 0.112 g increase in bird mass.
+
+- Bill culmen length coefficient (bill_culmen 0.138): on average, a 1 mm increase in bill culmen length is associated with a 0.138 g increase in bird mass.
+
+- Tarsus length coefficient (tarsus1 0.061): on average, a 1 mm increase in tarsus length is associated with a 0.061 g increase in bird mass.
+
+
+
+## Citation
+Rodenhouse, N., R. Holmes, S. Sillett, and M. Webster. 2019. Black-throated Blue Warbler capture histories, Hubbard Brook Experimental Forest, 1986 - 2010 ver 4. Environmental Data Initiative.
+https://doi.org/10.6073/pasta/ea985022acfdb76cd7beeaf8da6c39b1

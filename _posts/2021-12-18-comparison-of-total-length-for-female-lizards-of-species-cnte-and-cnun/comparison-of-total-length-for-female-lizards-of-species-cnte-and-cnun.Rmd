@@ -1,0 +1,150 @@
+---
+title: "Comparison of Total Length for Female Lizards of Species CNTE and CNUN"
+description: |
+  In this analysis, I compared the total length of female lizards from two species: CNTE (Cnemidophorus tessalatus, the Colorado Checkered lizard) and CNUN (Cnemidophorus uniparens, the Desert Grassland lizard). Using data collected from the Jornada Basin LTER between 1989 and 2006, I employed a two-sample t-test to assess the significance of the difference in total length between the two species, and quantified the effect size using Cohen’s d. The analysis revealed that CNTE females are significantly longer on average than CNUN females, with a large effect size.
+author:
+  - name: Mariano Viz
+    url: {}
+date: 12-18-2021
+output:
+  distill::distill_article:
+    self_contained: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+library(tidyverse)
+library(janitor)
+library(here)
+library(kableExtra)
+library(broom)
+library(ggbeeswarm)
+library(effsize)
+
+```
+### Introduction
+This report provides a comparison of the total length for female lizards of the species CNTE (Cnemidophorus tessalatus, the Colorado Checkered lizard) and CNUN (Cnemidophorus uniparens, the Desert Grassland lizard). Data was colected at Jornada Basin Long Term Ecological Research (LTER) from 1989 to 2006 using pitfall traps that were checked once a week at the minimum (Lightfoot, 2017). Following exploratory data visualization, total length of female lizards from the species CNTE and CNUN were compared by a two-sample t-tests (significance level ($\alpha$) of 0.05) and differences were described by Cohen's *d* effect size.
+All analyses are in R version 4.0.2 using RStudio version 1.3.1056.
+
+
+
+```{r}
+#Read in data and create a data subset with the variables spp, sex and total_length
+lizards <- read_csv("lizards.csv") %>% 
+  select("spp", "sex", "total_length")
+
+#Filter to only include females and species CNUN and CNTE; also exclude NA from total_length 
+lizards_subset <- lizards %>% 
+  filter(sex == "F",
+         spp %in% c("CNUN", "CNTE")) %>% 
+  filter(!is.na(total_length))
+
+```
+
+
+
+
+```{r}
+#Visualization comparing total lengths of female lizards for species CNUN and CNTE
+ggplot(data = lizards_subset, aes(x = spp, y = total_length)) +
+  geom_beeswarm(aes(color = spp),
+                size = 2,
+                alpha = 0.5,
+                cex=2.5)+
+  geom_boxplot(fill = NA, 
+               width = 0.2, 
+               outlier.color = NA)+
+  stat_summary(fun = mean,
+               alpha = 0.6,
+               size = 0.3) +
+  scale_color_manual(values = c("orange2","cyan4"))+
+  labs(x = "Species",
+       y = "Total length (mm)")+
+  theme_minimal() +
+  theme(legend.position="none")
+  
+```
+
+**Figure 1.** Total lengths (mm) of female lizards of the species CNTE (Cnemidophorus tessalatus, the Colorado Checkered lizard) and CNUN (Cnemidophorus uniparens, the Desert Grassland lizard). Orange (CNTE, Cnemidophorus tessalatus) and teal (CNUN, Cnemidophorus uniparens) points indicate individual observations for total length (millimeters) of female lizards. Box endpoints indicate the 25^th^ and 75^th^ percentile values. The black line and black point within the box indicate the total length median and mean value respectively. Data: Lightfoot (2017).
+
+
+
+**Table 2.** Descriptive statistics (mean, standard deviation, and sample size) for total length (mm) of female lizards from the species CNTE (Cnemidophorus tessalatus) and CNUN (Cnemidophorus uniparens). Data: Lightfoot (2017).
+
+```{r}
+#Summary statistics
+lizards_subset_table <- lizards_subset %>% 
+  group_by(spp) %>% 
+  summarize(mean_length = mean(total_length),
+            sd_lenght = sd(total_length),
+            sample_size = n())
+
+#Finalized summary table
+lizards_subset_table %>% 
+  kable(col.names = c("Species", "Mean total lenght (mm)", "Standard deviation (mm)", "Sample Size"),
+        digits = 1) %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+
+```
+
+
+
+```{r include = FALSE}
+
+#Exploratory graphs (hist and QQ-plot) to explore t-test assumptions
+
+ggplot(data = lizards_subset, aes(x = total_length)) +
+  geom_histogram(aes(fill = spp))+
+  facet_wrap(~spp)
+
+ggplot(data = lizards_subset, aes(sample = total_length)) +
+  geom_qq(aes(color = spp))+
+  facet_wrap(~spp)
+
+```
+
+Distributions of total length (plots not included) for female lizards of the species CNTE (Cnemidophorus tessalatus) and CNUN (Cnemidophorus uniparens)  were relatively normal and symmetric (bell-shaped histogram and quantile-quantile plot with an almost linear relationship).
+
+
+
+
+
+```{r}
+
+#T-test for finding significant difference in mean total length between female lizards for the two species (CNUN and CNTE) and Cohen's d for measuring effect size
+
+#T-Test
+CNTE_f<- lizards_subset %>% 
+  filter(spp == "CNTE") %>% 
+  pull(total_length)
+
+CNUN_f<- lizards_subset %>% 
+  filter(spp == "CNUN") %>% 
+  pull(total_length)
+
+spp_length_ttest <- t.test(CNTE_f, CNUN_f)
+
+#Tidy T-test values for in-line referencing
+spp_length_ttest_tidy <- tidy(spp_length_ttest)
+
+#Statistics for in-line referencing
+CNUN_mean <- mean(CNUN_f)
+CNTE_mean <- mean(CNTE_f)
+CNUN_sd <- sd(CNUN_f)
+CNTE_sd <- sd(CNTE_f)
+
+#Effect size (Cohen's d)
+spp_length_effsize <- cohen.d(CNTE_f, CNUN_f)
+
+```
+
+On average, the total length of CNTE (Cnemidophorus tessalatus) females is greater than that of CNUN (Cnemidophorus uniparens) females (`r round(CNTE_mean,2)` $\pm$ `r round(CNTE_sd, 2)` and `r round(CNUN_mean,2)` $\pm$ `r round(CNUN_sd, 2)` mm, respectively; mean $\pm$ 1 standard deviation). The absolute difference in means is `r round(CNTE_mean, 2) - round(CNUN_mean, 2)` mm (a `r round((CNTE_mean - CNUN_mean)/((CNTE_mean + CNUN_mean)/2)*100, 2)`% difference). The effect size is large (Cohen's *d* = `r round(spp_length_effsize$estimate,2)`) and the difference in means is significant (Welch two-sample t-test: t(`r round(spp_length_ttest_tidy$parameter,2)`) = `r round(spp_length_ttest_tidy$statistic,2)`, p = `r format.pval(spp_length_ttest_tidy$p.value, digits = 3)`).
+
+
+### Summary
+Exploratory data analysis reveals that, on average, the total length of female lizards of CNTE (Cnemidophorus tessalatus) is greater than that of CNUN (Cnemidophorus uniparens). This difference in total length is significant, and the effect size is large. 
+
+
+### Citations
+Lightfoot, D. 2017. Lizard pitfall trap data (LTER-II, LTER-III) ver 36. Environmental Data Initiative. https://doi.org/10.6073/pasta/ff37b4cace16a9943575f3fd7067064e

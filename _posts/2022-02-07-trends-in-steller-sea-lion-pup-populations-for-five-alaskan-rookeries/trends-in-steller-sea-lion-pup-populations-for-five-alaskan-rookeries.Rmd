@@ -1,0 +1,107 @@
+---
+title: "Trends in Steller Sea Lion Pup Populations for Five Alaskan Rookeries"
+description: |
+  In this analysis, I explored trends in Steller sea lion pup populations across five Alaskan rookeries (Sugarloaf, Marmot, Forrester Complex, Chowiet, and Hazy). The analysis involved data wrangling to calculate the mean pup counts by site and year, followed by data visualization to examine the population trends over time. The visual exploration revealed a decline in pup populations at Sugarloaf, Marmot, and Chowiet since 1980, while Hazy showed an increase. The Forrester Complex also showed an overall increase, but a notable drop in 2002 requires further investigation.
+author:
+  - name: Mariano Viz
+    url: {}
+date: 02-07-2022
+output:
+  distill::distill_article:
+    self_contained: false
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+
+library(here)
+library(tidyverse)
+library(janitor)
+
+```
+
+## Summary
+In this report I explore the trends in Steller sea lion pup populations for five Alaskan rookeries (Sugarloaf, Marmot, Forrester Complex, Chowiet, and Hazy). First, I wrangle the data to get the mean value of pup counts by site and year. Second, I visually explore the trends for each site. 
+
+```{r}
+#Read in data and update the column names to lower snake case 
+
+steller_pups <- read_csv("steller_pups.csv") %>% 
+  clean_names()
+
+
+```
+
+
+
+## Data wrangling:
+
+- Find the mean value of pup counts by site and year
+
+- Only keep observations from sites Sugarloaf, Marmot, Forrester Complex, Chowiet, and Hazy
+
+- Only columns containing the site name, year, and pup count
+
+- Rename pup counts as steller_pups 
+
+
+```{r}
+#Data wrangling: mean of recorded counts by site and year
+
+pups_site_year_counts <- steller_pups %>% 
+  group_by(sitename, year) %>% 
+  summarise(mean_counts = round(mean(pupcount), 2))
+
+```
+
+
+
+
+```{r}
+#Data wrangling: keep observations from sites Sugarloaf, Marmot, Forrester Complex, Chowiet, and Hazy; keep columns containing the site name, year, and pup count; rename pup counts column to steller_pups
+
+pups_subset <- pups_site_year_counts %>% 
+  filter(sitename %in% c("Sugarloaf", 
+                         "Marmot", 
+                         "Forrester Complex", 
+                         "Chowiet","Hazy")) %>% 
+  rename(steller_pups = mean_counts)
+  
+
+```
+
+
+
+## Data Visualization
+
+
+```{r}
+#Data Viz: plots of Steller pup estimated populations over time at the five sites
+
+ggplot(data = pups_subset, aes(x = year, y = steller_pups)) +
+  geom_point(color = "dodgerblue4", size = 0.5)+
+  geom_line(color = "dodgerblue4")+
+  geom_area(fill = "dodgerblue3", alpha = 0.1)+
+  facet_wrap(~sitename, scales = "free")+
+  labs(x = "Year",
+       y = "Steller pup population") +
+  theme_minimal()
+
+
+```
+
+**Figure 1.** Steller sea lion pup populations per year for five Alaskan rookeries (Sugarloaf, Marmot, Forrester Complex, Chowiet, and Hazy). Blue points indicate recorded counts of Steller sea lion pups. In the case that several counts were recorded for the same year, the plotted value represents the mean of those recorded counts. Data: Fritz et al. (2015).
+
+
+### Trends in Steller sea lion pup populations for the five Alaskan rookeries
+
+Charts show a decline in Steller sea lion pup populations from 1980 onwards for the sites Sugarloaf, Marmot, and Chowiet. In contrast, Hazy records an increase in pups population. Forrester Complex shows an increase in pup counts since 1980, however, a 2002 record of 0 pups is confusing. More analysis is required to explain this sudden drop in population. 
+
+
+
+
+## Citation
+Fritz, Lowell; Sweeney, Kathryn; Lynn, Morgan; Gelatt, Thomas; Gilpatrick, James; Towell, Rodney (2015). Counts of Alaska Steller sea lion pups conducted on rookeries in Alaska from 1961-06-22 to 2015-07-18 (NCEI Accession 0128189). NOAA National Centers for Environmental Information. Dataset. https://doi.org/10.7289/v5862ddr.
+
+

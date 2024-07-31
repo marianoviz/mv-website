@@ -1,0 +1,108 @@
+---
+title: "Association Between Respondents’ Political Affiliation and Environmentalist Self-identification"
+description: |
+  In this analysis, I explored the association between respondents' political affiliation (Conservative or Liberal) and their self-identification as environmentalists using a chi-squared test. The analysis, based on survey data from 1,331 U.S. respondents collected in August 2017, aimed to determine whether there is a significant relationship between political affiliation and environmentalist self-identification. The chi-squared test revealed a significant association, indicating that these two variables are not independent.
+author:
+  - name: Mariano Viz
+    url: {}
+date: 12-14-2021
+output:
+  distill::distill_article:
+    self_contained: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+library(tidyverse)
+library(janitor)
+library(here)
+library(kableExtra)
+library(broom)
+
+
+```
+
+### Introduction
+
+This report provides an exploratory analysis of the association between respondents’ political affiliation (Conservative or Liberal) and environmentalist self-identification (perception of respondents regarding whether they consider themselves environmentalists). Data was collected in August 2017 from an online panel of 1,331 anonymous, nationwide U.S respondents (Andrews Forest LTER Site and C. Batavia. 2019). The association between respondents’ political affiliation and environmentalist self-identification was explored by a chi-squared test (significance level ($\alpha$) of 0.05). 
+All analyses are in R version 4.0.2 using RStudio version 1.3.1056.
+
+
+
+```{r}
+#Read in data and update the column names to lower snake case
+
+survey <- read_csv("conservation_survey.csv") %>% 
+  clean_names()
+
+```
+
+
+
+```{r}
+# Create a data subset with the variables of interest (pol_or and env_id) and add a new column with political self-identification: Conservative (1,2,3) or Liberal (5,6,7); (4,8,9 pol_or values were excluded.)
+
+survey_env_pol <- survey %>% 
+  select("pol_or", "env_id") %>% 
+  mutate(pol_party = case_when(pol_or %in% c(1,2,3) ~ "Conservative",
+                               pol_or %in% c(5,6,7) ~ "Liberal")) %>% 
+  filter(pol_party %in% c("Conservative", "Liberal"))
+
+
+```
+
+
+**Table 1.** Counts and proportions of Conservative or Liberal survey respondents who responded “Yes”, “No” and “Unsure” to the statement “I consider myself an environmentalist.” Data: Andrews Forest LTER Site and C. Batavia (2019).
+
+```{r}
+#Create a finalized table showing counts and proportions
+
+survey_counts <- survey_env_pol %>% 
+  tabyl(pol_party, env_id) %>% 
+  rename("Yes" = "1",
+         "No" = "2",
+         "Unsure" = "3") 
+
+survey_counts_ft <- survey_counts %>% 
+  adorn_percentages() %>% 
+  adorn_pct_formatting(digits = 0) %>%
+  adorn_ns() %>%
+  kable(col.names = c("", "Yes", "No", "Unsure")) %>% 
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+survey_counts_ft
+```
+
+
+
+```{r}
+#Convert the counts to a contingency table 
+survey_ct <- survey_counts %>% 
+  column_to_rownames(var = "pol_party")
+
+
+#Perform a chi-square test  
+survey_x2 <-chisq.test(survey_ct)
+
+#Use tidy() to get the outputs of the chi-square test in tidy format for in-line referencing
+survey_x2_tidy <- tidy(survey_x2)
+
+
+```
+
+There is a significant association between respondents’ political affiliation (Conservative or Liberal) and environmentalist self-identification (perception of respondents regarding whether they consider themselves environmentalists). In other words, political affiliation and environmentalist self-identification are non-independent ($\chi$^2^(`r survey_x2_tidy$parameter`) = `r round(survey_x2_tidy$statistic, 2)`, *p* `r format.pval(survey_x2_tidy$p.value, digits = 3)`).
+
+
+
+### Summary
+
+Survey data exploration reveals that there is a significant association (i.e. non-independence) between respondents’ political affiliation and environmentalist self-identification.  
+
+
+### Citations
+
+Andrews Forest LTER Site and C. Batavia. 2019. Influences on charitable giving for conservation: Online survey data of 1,331 respondents across the US, August 2017 ver 3. Environmental Data Initiative. https://doi.org/10.6073/pasta/926e6270e324a1322a900da14d38b96c
+
+
+
+
