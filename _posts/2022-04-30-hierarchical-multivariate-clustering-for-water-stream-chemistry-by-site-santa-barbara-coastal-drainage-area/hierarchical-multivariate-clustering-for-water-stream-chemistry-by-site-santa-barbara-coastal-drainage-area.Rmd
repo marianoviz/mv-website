@@ -1,0 +1,101 @@
+---
+title: "Hierarchical Multivariate Clustering for Water Stream Chemistry by Site (Santa Barbara Coastal Drainage Area)"
+description: |
+  In this analysis, I applied hierarchical clustering using complete linkage to explore the multivariate relationships in water stream chemistry across different sites in the Santa Barbara coastal drainage area. The resulting dendrogram visually represents the clustering of sites based on their chemical composition, with clusters formed according to the multivariate similarity between sites. This approach helps to identify groups of sites with similar water chemistry, providing insights into the spatial patterns of stream chemistry in the region.
+author:
+  - name: Mariano Viz
+    url: {}
+date: 04-30-2022
+output:
+  distill::distill_article:
+    self_contained: false
+    code_folding: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+library(tidyverse)
+library(here)
+library(janitor)
+
+#For missing data (NAs): 
+library(naniar)
+
+# Plot dendogram:
+library(ggdendro)
+```
+
+**Data source:** Santa Barbara Coastal LTER and J. Melack. 2019. SBC LTER: Land: Stream chemistry in the Santa Barbara Coastal drainage area, ongoing since 2000 ver 16. Environmental Data Initiative. https://doi.org/10.6073/pasta/67a558a24ceed9a0a5bf5e46ab841174.
+
+## Summary
+
+In this analysis, I use hierarchical clustering by complete linkage to create a dendrogram showing multivariate clustering for water stream chemistry by site in the Santa Barbara coastal drainage area. Data: Santa Barbara Coastal LTER and Melack (2019).
+
+```{r}
+#Read in data:
+stream_chem_sb <- read_csv("sbc_lter_registered_stream_chemistry.csv") %>% 
+  replace_with_na_all(condition = ~.x == -999) #rename missing values (-999) as NA
+```
+
+
+```{r}
+#Data wrangling:
+stream_chem_mean <- stream_chem_sb %>%
+  #group by site
+  group_by(site_code) %>% 
+  #set new columns with mean values
+  summarise(mean_nh4 = mean(nh4_uM, na.rm = TRUE), 
+            mean_no3 = mean(no3_uM, na.rm = TRUE),
+            mean_po4 = mean(po4_uM, na.rm = TRUE),
+            mean_tdn = mean(tdn_uM, na.rm = TRUE),
+            mean_tdp = mean(tdp_uM, na.rm = TRUE),
+            mean_tpc = mean(tpc_uM, na.rm = TRUE),
+            mean_tpn = mean(tpn_uM, na.rm = TRUE),
+            mean_tpp = mean(tpp_uM, na.rm = TRUE),
+            mean_tss = mean(tss_mgperLiter, na.rm = TRUE),
+            mean_spec_cond = mean(spec_cond_uSpercm, na.rm = TRUE) 
+    ) %>% 
+  #exclude rows with missing data
+  na.omit() 
+
+#Scale data (columns 2:11):
+stream_chem_scale <- stream_chem_mean %>%   
+  select(2:11) %>% 
+  scale()
+
+# Add sites as rownames from stream_chem_mea:
+rownames(stream_chem_scale) <- stream_chem_mean$site_code
+
+```
+
+
+```{r}
+#Get the Euclidean distance with `stats::dist()`:
+stream_chem_euc_dist <- dist(stream_chem_scale, method = "euclidean")
+
+```
+
+
+
+```{r}
+# Complete linkage agglomerative hierarchical clustering with `stats::hclust()`:
+
+## Hierarchical clustering (complete linkage):
+stream_chem_hc_comp <- hclust(stream_chem_euc_dist, method = "complete" )
+
+## Plots:
+
+###Base plot:
+    #plot(stream_chem_hc_comp, cex = 0.6, hang = -1)
+
+### Ggdendogram:
+ggdendrogram(stream_chem_hc_comp, 
+             rotate = TRUE) +
+  theme_minimal() +
+  labs(x = "Site Code",
+       y = "")
+
+
+```
+
+**Figure 1.** Complete linkage agglomerative hierarchical clustering for water stream chemistry by site in the Santa Barbara coastal drainage area. Black lines show the grouping of sites into clusters based on multivariate similarity. Data: Santa Barbara Coastal LTER and Melack (2019). 

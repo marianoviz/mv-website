@@ -1,0 +1,95 @@
+---
+title: "Macronutrients and Energy Content in Beef Products, Pork Products, and Poultry Products"
+description: |
+  In this analysis, I explored the relationship between protein, carbohydrate, fat, and energy content in three food groups (Beef Products, Pork Products, and Poultry Products) using Principal Components Analysis (PCA). PCA is a statistical technique used to reduce the dimensionality of multivariate data while retaining as much information as possible. This allows for easier visualization and identification of patterns, relationships, and outliers. The results were visualized using a biplot, where the first two principal components explained 80% of the variance in the data, revealing strong correlations between certain macronutrients and the distinct clustering of food groups.
+author:
+  - name: Mariano Viz
+    url: {}
+date: 04-07-2022
+output:
+  distill::distill_article:
+    self_contained: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+library(tidyverse)
+library(here)
+library(janitor)
+library(ggfortify)
+
+
+```
+
+### Introduction
+In this report, I explore the variables protein, carbohydrate, fat, and energy content in three different food groups (Beef Products, Pork Products, and Poultry Products) by performing a Principal Components Analysis (PCA) and reflecting this information on a biplot. PCA is an ordination method used to visualize patterns in multivariate data that allows to reframe multivariate data in a simplified number of dimensions while retaining as much information as possible. This way, PCA enables us to easily explore the relationship between the variables and identify multivariate patterns and outliers. 
+Data for this report was taken from the USDA National Nutrient Database (https://fdc.nal.usda.gov/).
+
+
+
+```{r}
+#Read in data and update the column names to lower snake case: 
+nutrients_data <- read_csv("usda_nutrients.csv") %>% 
+  clean_names()
+
+```
+
+
+
+
+```{r}
+#Data wrangling and PCA: 
+meat_macronut_pca <- nutrients_data %>% 
+  filter(food_group %in% c("Beef Products", "Pork Products", "Poultry Products")) %>% 
+  select(energy_kcal, ends_with("_g"), -c(fiber_g, sugar_g)) %>% 
+  scale() %>% #scale: setting variables in the same numeric scale
+  prcomp()
+
+#Create a subset with the variables and exactly same observations for adding details to the biplot:
+meat_macronut <- nutrients_data %>%
+  filter(food_group %in% c("Beef Products", "Pork Products", "Poultry Products"))
+
+#Variance described by each PC:
+#screeplot(meat_macronut_pca, type = "lines")
+
+#Loadings for each PC:
+#meat_macronut_pca$rotation
+  
+#Biplot:
+autoplot(meat_macronut_pca, 
+         data = meat_macronut,
+         colour = 'food_group',
+         shape = 'food_group',
+         size = 1.5,
+         alpha = 0.5,
+         loadings = TRUE,
+         loadings.label = TRUE,
+         loadings.colour = "black",
+         loadings.label.colour = "black",
+         loadings.label.hjust = -0.2,
+         loadings.label.vjust = 0.3) +
+  scale_color_manual(values = c("orange1","dodgerblue2","forestgreen")) +
+  scale_fill_manual(values = c("orange1","dodgerblue2","forestgreen")) +
+  scale_shape_manual(values = c (20,15,17)) +
+  labs(shape = "Food Group", color = "Food Group")+
+  theme_minimal()+
+  theme(legend.position = c(0.15, 0.82), legend.direction = "vertical")
+                              
+ 
+
+```
+
+**Figure 1.**  Biplot of the PCA ordination performed for the variables protein, carbohydrate, fat, and energy content in three different food groups. Orange dots represent observations for Beef Products, blue squares for Pork Products, and green triangles for Poultry Products. Their position reflects the score of each observation based on the principal components (PC1 and PC2). Distance between observations approximate the Euclidean distance and allow assessing similarity in multivariate space and identifying multivariate groups and outliers. Arrows show the loading of variables for each principal component (PC1 and PC2). Their length indicates variance in the principal component direction (PC1 horizontal component and PC2 vertical component); the angle between them shows the variables correlation. Data USDA (2019).
+
+
+
+### Summary
+Displayed PCA biplot describes 80% of variance in the analyzed data (PC1 55% and PC2 25%). The arrows convey information about the examined variables. The small angle separating the variables fat and energy reveals a strong positive correlation between them. In turn, these variables are negatively correlated with protein and not highly correlated with carbohydrates (almost right angle). At the same time, the distribution of observation in the biplot enables recognizing multivariate groups and outliers. Here we can observe a big cluster of multivariate similar observations in the center of the biplot and some outlier observations extending vertically (poultry products) and horizontally (mainly beef and pork products).  
+
+
+### Citation:
+U.S. Department of Agriculture, Agricultural Research Service. FoodData Central, 2019. https://fdc.nal.usda.gov/
+
+
+
+

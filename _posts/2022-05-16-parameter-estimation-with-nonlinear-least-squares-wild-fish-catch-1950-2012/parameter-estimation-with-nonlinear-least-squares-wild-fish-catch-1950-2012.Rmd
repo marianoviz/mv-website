@@ -1,0 +1,182 @@
+---
+title: "Parameter Estimation with Nonlinear Least Squares: Wild Fish Catch (1950-2012)"
+description: |
+  In this analysis, I applied nonlinear least squares to estimate parameters for a logistic growth model describing the trend of wild fish catch from 1950 to 2012. The data, sourced from the FAO, showed an initial exponential increase in fish catch over the first 40 years, followed by a plateau. The logistic growth equation was used to model this relationship, with the carrying capacity (K), growth rate constant (k), and initial population parameter (A) estimated through nonlinear least squares fitting. The resulting model accurately captures the trend of wild fish catch over time, providing insights into the dynamics of global fishery resources.
+author:
+  - name: Mariano Viz
+    url: {}
+date: 05-16-2022
+output:
+  distill::distill_article:
+    self_contained: false
+    code_folding: true
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+
+library(tidyverse)
+library(here)
+library(janitor)
+library(broom)
+
+```
+
+**Data source:** Global wild fish catch and aquaculture production, compiled by Earth Policy Institute with 1950-2012 from U.N. Food and Agriculture Organization (FAO). Available at: https://www.fao.org/fishery/topic/16140/en
+
+
+
+## Summary
+
+In this report, I use nonlinear least squares to find parameters for a model describing wild fish catch over time. Data: FAO (2012).
+
+
+```{r}
+#Read in data and initial wrangling:
+fish_catch <- read_csv("fish_catch.csv", skip=2) %>% 
+  slice(-c(66:69)) %>% #keep rows with relevant information for the analysis
+  slice(-c(1:2)) %>% 
+  clean_names() #names to lowercase
+
+
+#Add new column with years 0-62 (1950 = 0 / 2012 = 62):
+fish_catch_years <- fish_catch %>% 
+  mutate(years = 0:(n() - 1)) %>% 
+  mutate(wild_catch = as.numeric(wild_catch)) %>% 
+  mutate(year = as.numeric(year))
+
+```
+
+
+
+```{r}
+#Exploratory graph:
+
+ggplot(data = fish_catch_years, aes(x = years, y = wild_catch)) +
+  geom_point() +
+  labs(x = "time (years)", y = "wild fish catch (Mt)") +
+  theme_minimal()
+
+
+#Log transformed data:
+#ggplot(data = fish_catch_years, aes(x = years, y = log(wild_catch))) +
+  #geom_point() +
+  #labs(x = "time (years)", y = "ln(wild fish catch)") +
+  #theme_minimal()
+
+```
+
+
+
+
+
+
+The exploratory graph describes a logistic relationship. In the first 40 years (1950-1990) wild fish catch increases exponentially and then remain relatively constant near 94 Mt.
+
+The logistic growth equation describes this relationship:
+
+$P(t)=\frac{K}{1+Ae^{-kt}}$
+
+- $K$ is the carrying capacity
+- $A$ is $\frac{K-P_0}{P_0}$
+- $k$ is the growth rate constant
+
+
+
+```{r results='hide'}
+#Initial estimates for the parameters in the model:
+
+##Estimate the growth constant during exponential phase (to get a starting-point guess for *k*):
+
+### Get the first 40 years (exponential growth) and log transform the population to estimate the growth rate constant (k) during this exponential growth:
+fish_catch_exp <- fish_catch_years %>% 
+  filter(years < 40) %>% 
+  mutate(ln_wild_catch = log(wild_catch))
+
+
+### Make a linear model to get the slope (slope = growth rate constant *k*):
+lm_fish_catch <- lm(ln_wild_catch ~ years, data = fish_catch_exp)
+
+lm_fish_catch 
+# slope: (k) ~ 0.0356
+
+
+### Initial estimates: # k = 0.356 
+                       # K = 94
+                       # A = (K-P0)/P0 = 4.5
+
+
+```
+
+
+
+
+## Nonlinear least squares
+
+```{r results='hide'}
+#Nonlinear least squares to find parameter for the model describing wild catch:
+fish_catch_nls <- nls(wild_catch ~ K/(1 + A*exp(-k*years)),
+              data = fish_catch_years,
+              start = list(K = 94, 
+                           A = 4.5, 
+                           k = 0.356),
+              trace = TRUE
+              )
+
+
+#Model summary:
+summary(fish_catch_nls)
+
+
+
+#Report the parameter outcomes (with units) in text or a table:
+
+## Model outputs in tidy format: 
+fish_catch_out <- broom::tidy(fish_catch_nls) 
+  #View(fish_catch_out)
+
+  #In line references:
+      # K = `r round(fish_catch_out$estimate[1],2)`
+      # A = `r round(fish_catch_out$estimate[2],2)` 
+      # k = `r round(fish_catch_out$estimate[3],4)`
+
+
+```
+
+
+Estimated parameters:
+
+- *K* = `r round(fish_catch_out$estimate[1],2)` Mt
+- *A* = `r round(fish_catch_out$estimate[2],2)` Mt
+- *k* = `r round(fish_catch_out$estimate[3],4)` year^-1^
+
+
+Model with estimated parameters:
+
+$P(t) = \frac{100.28}{1+4.32e^{-0.699t}}$
+
+
+
+
+
+```{r}
+#Finalized graph showing original data and model output:
+
+## Make predictions for wild catch for all of the years: 
+fish_catch_predict <- predict(fish_catch_nls)
+
+## Add predictions to data:
+fish_catch_comp <- data.frame(fish_catch_years, fish_catch_predict)
+
+# Plot them all together:
+ggplot(data = fish_catch_comp) +
+  geom_point(aes(x = year, y = wild_catch)) +
+  geom_line(aes(x = year, y = fish_catch_predict), color = "dodgerblue2") +
+  labs(x = "year", y = "wild fish catch (Mt)") +
+  geom_text(aes(x = 1978,y = 65, label= "Model output", hjust = 1), size = 2.5, color = "dodgerblue2")+
+  theme_minimal()
+
+```
+
+

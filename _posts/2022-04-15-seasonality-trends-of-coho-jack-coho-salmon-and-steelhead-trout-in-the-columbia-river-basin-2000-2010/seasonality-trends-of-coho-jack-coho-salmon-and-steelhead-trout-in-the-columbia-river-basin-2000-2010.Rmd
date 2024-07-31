@@ -1,0 +1,252 @@
+---
+title: "Seasonality Trends of Coho, Jack Coho Salmon, and Steelhead Trout in the Columbia River Basin (2000-2010)"
+description: |
+  In this analysis, we explored the seasonal migration trends of Steelhead trout, Coho salmon, and Jack-Coho salmon as they passed through the Willamette Falls fish ladder in Oregon, using data from 2000 to 2010. The analysis involved time series visualization to capture the temporal trends for each species and seasonal plots to illustrate the variation within each year. The findings revealed distinct seasonal migratory patterns, with all three species showing peak presence in the fall. The time series analysis indicated that Steelhead trout numbers remained relatively stable, while Coho and Jack-Coho salmon populations displayed an increasing trend over the studied period.
+author:
+  - name: Meghan Fletcher
+    url: {}
+  - name: Peyton Moore
+    url: {}
+  - name: Mariano Viz
+    url: {}
+date: 04-15-2022
+output:
+  distill::distill_article:
+    self_contained: false
+    code_folding: true
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+library(here)
+library(tidyverse)
+library(janitor)
+library(lubridate)
+library(tsibble)
+library(scales)
+
+library(prettydoc)
+library(feasts)
+library(fable)
+library(patchwork)
+
+# For time series data
+library(tsibble)
+library(feasts)
+library(fable)
+library(urca)
+
+```
+
+
+```{r}
+#INITIAL WRANGLING:
+
+#Read in data and update to lower case:
+willamette_fish_passage <- read_csv("willamette_fish_passage.csv")%>% 
+  clean_names()
+
+#Mutate date to class "Date" and convert data to time series data frame (tsibble):
+willamette_ts <- willamette_fish_passage %>% 
+  mutate(date = mdy(date)) %>%
+  as_tsibble(key = NULL, index = date)
+  
+
+
+```
+
+![](https://images.squarespace-cdn.com/content/v1/5c33c4d3b1059881395762dd/1684275844379-UL9LC5Z08DOODPNADMNR/WFT_20220714_281_IL+3.jpg?format=2500w)
+
+Willamette Falls in June 2012 | Credit: Peggy Sigler
+
+
+
+
+## Overview
+
+Here we look at the seasonal variation in passage of Steelhead trout, Coho salmon, and Jack-Coho salmon through the Willamette Falls fish ladder in Williamette, Oregon. Our analysis displays the varying seasonal trends for each of these three species as well as changes over time, looking at data from 2001-2010. This provides important insights into the population dynamics of all three species, which are of great ecological, cultural and economic value. 
+
+![](https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhPDP20xSyNAtT5U6FJNzzzSCnmGecCWGUKVE4MjBnTKFA4amUWtgvbrf4aZOb_ktZGp9Ckm-mkxIiy32Kj5g_30pmOil5NbVaQLUQ_8GW1BKWZAQVFzH1XqOq6ibtnKaCCdVTyq4uVj6s/s1600/Salmon+Map.jpg)
+
+Columbia River Basin salmon run map | Credit: www.bpa.gov
+
+
+**Data source:** [Columbia Basin Research, School of Aquatic & Fishery Sciences, University of Washington; additional data courtesy of U.S. Army Corps of Engineers, NWD and Chelan, Douglas, and Grant County PUDs, Yakima Klickitat Fisheries Project, Colville Tribes Fish & Wildlife (OBMEP), Oregon Department of Fish & Wildlife, Washington Department of Fish & Wildlife (2021).](http://www.cbr.washington.edu/dart/query/adult_graph_text)
+
+
+
+## Fish passage at the Willamette Falls, Willamette River (Oregon) {.tabset}
+
+
+### Tab 1: Time Series of Fish Passage
+
+```{r}
+# Read in data
+fish_data <- read_csv("willamette_fish_passage.csv") %>% 
+  clean_names()
+
+# Select for coho, jack coho and steelhead
+fish_clean <- fish_data %>% 
+  select("date", "steelhead", "coho", "jack_coho") %>% 
+  mutate(across(where(is.numeric), ~ ifelse(is.na(.), 0, .))) %>% 
+  mutate(date = mdy(date)) %>% 
+  mutate(year = year(date))
+```
+
+```{r}
+# Wrangle data in preparation for time series
+fish_ts <- fish_clean %>% 
+  mutate(yearmonth = yearmonth(date)) %>% 
+  as_tibble(key = NULL, index = yearmonth) 
+```
+
+```{r, fig.cap="This time series reveals the trend in steelhead salmon migration through the Columbia River from 2000 to 2010.Data: [Columbia River DART](http://www.cbr.washington.edu/dart/query/adult_graph_text) (Data Access in Real Time)."}
+# Steelhead salmon
+ggplot(data = fish_ts, aes(x = date, y = steelhead, color = steelhead)) +
+  geom_line(color = "palegreen4") +
+  theme_minimal() +
+  labs(x = "Year", y = "Steelhead Salmon", title = "Steelhead Trout Passage over Time")
+```
+
+```{r, fig.cap="This time series reveals the trend in coho salmon migration through the Columbia River from 2000 to 2010.Data: [Columbia River DART](http://www.cbr.washington.edu/dart/query/adult_graph_text) (Data Access in Real Time)."}
+# Coho slamon
+ggplot(data = fish_ts, aes(x = date, y = coho, color = coho)) +
+  geom_line(color = "red3") +
+  theme_minimal() +
+  labs(x = "Year", y = "Coho Salmon", title = "Coho Salmon Passage over Time")
+```
+
+```{r, fig.cap="This time series reveals the trend in jack coho salmon migration through the Columbia River from 2000 to 2010.Data: [Columbia River DART](http://www.cbr.washington.edu/dart/query/adult_graph_text) (Data Access in Real Time)."}
+# Jack Coho salmon
+ggplot(data = fish_ts, aes(x = date, y = jack_coho, color = jack_coho)) +
+  geom_line(color = "orange1") +
+  theme_minimal()+
+  labs(x = "Year", y = "Jack Coho Salmon", title = "Jack Coho Salmon Passage over Time")
+```
+From the times series graphs on steelhead trout, coho and jack coho salmon, we can see that:
+
+- All three species have strong, seasonal migratory patterns through the Columbia River. Each species appears to have a strong presence later in the year - during the fall.
+
+- Steelhead trout numbers have remained relatively constant and are predicted to remain constant through 2030 while coho and jack coho salmon numbers are expected to increase.
+
+- Steelhead trout spend a greater time on average in the Columbia River than do either of the other two species. 
+
+### Tab 2: Season Plots 
+
+
+```{r, fig.width = 10, fig.height = 8,fig.cap="Abundance of Coho, Jack-Coho and Steelhead seasonally observed in at Willamette Falls fish ladder Willamette, Oregon. These observations range from 2001-2010.Year is indicated by color. Data: [Columbia River DART](http://www.cbr.washington.edu/dart/query/adult_graph_text) (Data Access in Real Time)."}
+
+
+willamette_long <- willamette_ts %>% 
+  pivot_longer(cols = chinook_run:pink, 
+               names_to = "species", 
+               values_to = "counts") %>% 
+  filter(species %in% c("coho", "jack_coho", "steelhead"))
+
+
+coho_season <- willamette_long %>% 
+  filter(species == "coho") %>% 
+  gg_season(y = counts, 
+            period = "year", 
+            show.legend = FALSE)+
+  ylim(0,1000)+
+  theme_minimal()+
+  labs(x= "", y = "", title = "Coho Salmon")
+
+#coho_season
+
+jack_coho_season <- willamette_long %>% 
+  filter(species == "jack_coho") %>% 
+  gg_season(y = counts, 
+            period = "year")+
+  theme_minimal()+
+  ylim(0,1000)+
+  labs(x= "", 
+       y = "Number of Observations", title = "Jack-Coho Salmon")
+
+#jack_coho_season
+
+
+steelhead_season <- willamette_long %>% 
+  filter(species == "steelhead") %>% 
+  gg_season(y = counts, 
+            period = "year", 
+            show.legend = FALSE)+
+  theme_minimal()+
+  ylim(0,1000)+
+  labs(x= "Month", y = "", title = "Steelhead Trout") 
+
+#steelhead_season
+
+# compound_season <- willamette_long %>% 
+#   gg_season(y = counts, 
+#             period = "year")+
+#   facet_wrap(~species)+
+#   theme_minimal()
+# 
+# compound_season
+
+patch_season <- (coho_season/jack_coho_season/steelhead_season)+
+  plot_annotation(title = "Coho, Jack-Coho, and Steelhead Seasonal Abundance in Willamette Falls (2001-2010)")
+
+patch_season
+```
+
+
+From the season plots on steelhead trout, coho and jack coho salmon, we can see that:
+- Coho and Jack-Coho are consistently at peak abundance in October, with at least small numbers of individuals present from August to November. 
+
+- The number of Coho observed seems to have increased in recent years. 
+
+- Observations of Steelhead are more diffuse throughout the year with the most observations ranging from February to July.
+
+
+### Tab 3: Annual Counts by Species
+
+```{r, fig.cap="Annual counts by species at the Willamette Falls fish ladder, Willamette River, Oregon (2001-2010). Red, orange, and green lines indicate counts for the species coho, jack coho, and steelhead, respectively. Data: [Columbia River DART](http://www.cbr.washington.edu/dart/query/adult_graph_text) (Data Access in Real Time)."}
+willamette_fish_annual <- willamette_fish_passage %>%
+  mutate(date = mdy(date)) %>%
+  mutate(date_year = year(date)) 
+
+coho_annual <- willamette_fish_annual %>%
+  count(date_year, wt = coho)
+jack_coho_annual <- willamette_fish_annual %>%
+  count(date_year, wt = jack_coho)
+steelhead_annual <- willamette_fish_annual %>%
+  count(date_year, wt = steelhead)
+
+ 
+
+ggplot()+ 
+  geom_line(data = coho_annual, aes(x = date_year, y = n, color = "Coho"), size = 0.7) +
+  geom_line(data = jack_coho_annual, aes(x = date_year, y = n, color = "Jack Coho"), size = 0.7) +
+  geom_line(data = steelhead_annual, aes(x = date_year, y = n, color = "Steelhead"), size = 0.7) +
+  scale_x_continuous(breaks=c(2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010), limits = c(2001,2010)) + 
+  scale_color_manual(values = c( "Coho" = "red3", "Jack Coho" = "orange1", "Steelhead" = "palegreen4"))+
+  labs(color = "Species")+
+  scale_y_continuous(labels = scales::label_number(scale_cut = scales::cut_si("")))+
+  labs(x = "Year",
+       y = "Counts",
+       title = "Annual counts by Species, Willamette Falls (2001-2010)") +
+  theme_minimal()
+
+
+
+```
+
+
+
+
+
+**Summary**
+
+Annual counts of coho, jack coho, and steelhead species on the Willamette Falls fish ladder (2001-2010) show the following major trends:  
+
+- An overall low number of the jack coho species for the entire time period 2001-2010 
+
+- A marked increase in the counts of individuals of the coho species for the years 2009-2010
+
+- A high number of individuals of the steelhead species for the period 2001-2004 followed by a relative decrease in the years 2005-2009 and a recent increase in the year 2010
+
+

@@ -1,0 +1,107 @@
+---
+title: "Bootstrapped Confidence Interval for Proportions"
+description: |
+  In this analysis, I applied bootstrapping to estimate the confidence interval for the proportion of nonbinary/genderqueer UCSB community members who reported experiencing “exclusionary, offensive, hostile or intimidating conduct.” Using data from the UCSB Campus Climate Project, I calculated the proportion of respondents who reported such experiences and generated 100,000 bootstrap samples to create a distribution of proportions. The resulting 95% confidence interval for the bootstrapped distribution provides a robust estimate of the true proportion, offering insights into the prevalence of these experiences within the community.
+author:
+  - name: Mariano Viz
+    url: {}
+date: 03-26-2022
+output:
+  distill::distill_article:
+    self_contained: false
+    code_folding: true
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+
+library(tidyverse)
+library(boot)
+library(broom)
+
+```
+
+**Data source:** UCSB Campus Climate Project Final Report (2014). Prepared by Rankin & Associates Consulting. Available at:
+http://campusclimate.ucop.edu/_common/files/pdf-climate/ucsb-full-report.pdf
+
+
+## Summary
+In this report, I use data from a survey of UCSB community members in which 22 out of 36 individuals identified as nonbinary/genderqueer responded that they had personally experienced “exclusionary, offensive,
+hostile or intimidating conduct” and applying bootstrapping I find the confidence interval for the bootstrapped distribution. Data: UCSB Campus Climate Project Final Report (2014).
+
+
+```{r}
+#Vector of UCSB community members identified as nonbinary/genderqueer responds:
+  # n = 36
+  # 22/36 = "1" (personally experienced “exclusionary, offensive, hostile or intimidating conduct”)
+  # 14/36 = "0" (didn't experience “exclusionary, offensive, hostile or intimidating conduct”)
+
+ucsb_resp <- rep(c(1, 0),times=c(22, 14)) 
+
+
+```
+
+
+```{r}
+#Create a function that calculates the proportion of UCSB community members identified as nonbinary/genderqueer who responded that they had personally experienced “exclusionary, offensive, hostile or intimidating conduct”
+
+prop <- function (x, i) {
+  sum(x[i])/length(x[i])
+}
+
+
+##Test function:
+#prop(ucsb_resp)
+   #result = 0.61
+
+
+```
+
+
+
+
+```{r}
+# Create 100,000 bootstrap samples by resampling ucsb_resp vector and use the prop() function to calculate the respond proportions on each:
+set.seed(1) #specify random number seed
+ucsb_resp_100k <- boot(ucsb_resp, 
+                       statistic = prop, 
+                       R = 100000)
+  
+# Check the output:  
+#ucsb_resp_100k
+
+
+```
+
+
+
+
+```{r}
+#Histogram of bootsrapped proportions:
+
+## Make a data frame with the vectors of bootstrap sample proportions: 
+ucsb_resp_100k_df <- data.frame(uscb_resp_prop = ucsb_resp_100k$t)
+
+## Histogram plot:
+ ggplot(data = ucsb_resp_100k_df, aes(x = uscb_resp_prop)) +
+  geom_histogram(bins = 25) +
+   theme_minimal()+
+   labs(x = "Boostrapped proportions (nonbinary individuals that experienced exclusionary conduct)")
+
+```
+
+**Figure 1.** Histogram of bootstrap proportions (100,000 bootstrap samples from an original sample n = 36) for nonbinary/genderqueer UCSB community members that had personally experienced “exclusionary, offensive, hostile or intimidating conduct”. Data: UCSB Campus Climate Project Final Report (2014).
+
+
+```{r results='hide'}
+#Use bootstrapped sampling distribution to find the confidence interval:
+
+ucsb_resp_100k_ci <- boot.ci(ucsb_resp_100k, conf = 0.95)
+
+#results:
+ucsb_resp_100k_ci
+```
+
+
+The proportion of UCSB community members identifying as nonbinary/genderqueer who responded that they had personally experienced “exclusionary, offensive, hostile or intimidating conduct” is 0.61 (n = 36), with a bootstrapped 95% confidence interval of [0.45, 0.77] (n = 100,000 bootstrap samples). Data: UCSB Campus Climate Project Final Report (2014).
