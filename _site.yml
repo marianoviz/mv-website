@@ -7,10 +7,10 @@ navbar:
   right:
     - text: "Home"
       href: index.html
+    - text: "Ecological Data Analysis Portfolio"      
+      href: blog.html
     - text: "Resume"
       href: CV.html
-    - text: "R programming skills!"      
-      href: blog.html
     - text: "Professional Bio"      
       href: bio.html
 output: distill::distill_article

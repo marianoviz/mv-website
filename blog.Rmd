@@ -1,5 +1,5 @@
 ---
-title: "Data Analysis"  # any name you want here
+title: "Regression, Hypothesis Testing, Multivariate Analysis, and More!"  # any name you want here
 listing: posts # do this exactly
 ---
 
