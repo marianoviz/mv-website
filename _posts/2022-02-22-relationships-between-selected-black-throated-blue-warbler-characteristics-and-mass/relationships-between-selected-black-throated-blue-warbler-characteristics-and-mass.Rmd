@@ -53,6 +53,7 @@ ggplot(data = warblers, aes(x = wing_r, y = mass)) +
   geom_point(aes(color = sex), alpha = 0.5) +
   facet_wrap(~age_banded, labeller = labeller(age_banded=age_banded_labs))+
   scale_color_manual(values = c("orange1","cyan4")) +
+  theme_minimal() +
   labs( y = "Mass (g)",
         x = "Wing lenght (mm)")
 
@@ -60,6 +61,7 @@ ggplot(data = warblers, aes(x = bill_depth, y = mass)) +
   geom_point(aes(color = sex), alpha = 0.5) +
   facet_wrap(~age_banded, labeller = labeller(age_banded=age_banded_labs))+
   scale_color_manual(values = c("orange1","cyan4")) +
+  theme_minimal() +
   labs( y = "Mass (g)",
         x = "Bill cross-section depth (mm)")
 
@@ -67,6 +69,7 @@ ggplot(data = warblers, aes(x = bill_culmen, y = mass)) +
   geom_point(aes(color = sex), alpha = 0.5) +
   facet_wrap(~age_banded, labeller = labeller(age_banded=age_banded_labs))+
   scale_color_manual(values = c("orange1","cyan4")) +
+  theme_minimal() +
   labs( y = "Mass (g)",
         x = "Bill culmen length (mm)")
 
@@ -74,6 +77,7 @@ ggplot(data = warblers, aes(x = tarsus1, y = mass)) +
   geom_point(aes(color = sex), alpha = 0.5) +
   facet_wrap(~age_banded, labeller = labeller(age_banded=age_banded_labs))+
   scale_color_manual(values = c("orange1","cyan4")) +
+  theme_minimal() +
   labs( y = "Mass (g)",
         x = "Tarsus length (mm)")
 
