@@ -50,16 +50,17 @@ pre.numberSource code > span > a:first-child::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {   }
+  { color: #00769e; background-color: #f1f3f5; }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
+code span { color: #00769e; } /* Normal */
 code span.al { color: #ad0000; } /* Alert */
 code span.an { color: #5e5e5e; } /* Annotation */
-code span.at { color: #20794d; } /* Attribute */
+code span.at { color: #657422; } /* Attribute */
 code span.bn { color: #ad0000; } /* BaseN */
 code span.bu { } /* BuiltIn */
-code span.cf { color: #007ba5; } /* ControlFlow */
+code span.cf { color: #00769e; } /* ControlFlow */
 code span.ch { color: #20794d; } /* Char */
 code span.cn { color: #8f5902; } /* Constant */
 code span.co { color: #5e5e5e; } /* Comment */
@@ -73,17 +74,18 @@ code span.fl { color: #ad0000; } /* Float */
 code span.fu { color: #4758ab; } /* Function */
 code span.im { } /* Import */
 code span.in { color: #5e5e5e; } /* Information */
-code span.kw { color: #007ba5; } /* Keyword */
+code span.kw { color: #00769e; } /* Keyword */
 code span.op { color: #5e5e5e; } /* Operator */
-code span.ot { color: #007ba5; } /* Other */
+code span.ot { color: #00769e; } /* Other */
 code span.pp { color: #ad0000; } /* Preprocessor */
-code span.sc { color: #20794d; } /* SpecialChar */
+code span.sc { color: #5e5e5e; } /* SpecialChar */
 code span.ss { color: #20794d; } /* SpecialString */
 code span.st { color: #20794d; } /* String */
 code span.va { color: #111111; } /* Variable */
 code span.vs { color: #20794d; } /* VerbatimString */
 code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </style>
+
 
   <!--radix_placeholder_meta_tags-->
   <title>Exploratory Analysis of Juvenile Snowshoe Hares in Bonanza Creek Experimental Forest</title>
@@ -187,6 +189,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   d-article table.gt_table td,
   d-article table.gt_table th {
     border-bottom: none;
+    font-size: 100%;
   }
 
   .html-widget {
@@ -227,9 +230,21 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     display: none !important;
   }
 
+  hr.section-separator {
+    border: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    margin: 0px;
+  }
+
+
+  d-byline {
+    border-top: none;
+  }
+
   d-article {
     padding-top: 2.5rem;
     padding-bottom: 30px;
+    border-top: none;
   }
 
   d-appendix {
@@ -324,6 +339,11 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   d-article div.sourceCode pre {
     padding-left: 18px;
     font-size: 14px;
+  }
+
+  /* tweak for Pandoc numbered line within distill */
+  d-article pre.numberSource code > span {
+      left: -2em;
   }
 
   d-article pre {
@@ -428,10 +448,6 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     position: relative;
     margin-bottom: 2.5em;
     margin-top: 1.5em;
-  }
-
-  .figure img {
-    width: 100%;
   }
 
   .figure .caption {
@@ -1089,6 +1105,12 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     // create d-title
     $('.d-title').changeElementType('d-title');
 
+    // separator
+    var separator = '<hr class="section-separator" style="clear: both"/>';
+    // prepend separator above appendix
+    $('.d-byline').before(separator);
+    $('.d-article').before(separator);
+
     // create d-byline
     var byline = $('<d-byline></d-byline>');
     $('.d-byline').replaceWith(byline);
@@ -1166,8 +1188,9 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     $('.distill-force-highlighting-css').parent().remove();
 
     // remove empty line numbers inserted by pandoc when using a
-    // custom syntax highlighting theme
-    $('code.sourceCode a:empty').remove();
+    // custom syntax highlighting theme, except when numbering line
+    // in code chunk
+    $('pre:not(.numberLines) code.sourceCode a:empty').remove();
 
     // load distill framework
     load_distill_framework();
@@ -1193,12 +1216,13 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
       // add orcid ids
       $('.authors-affiliations').find('.author').each(function(i, el) {
         var orcid_id = front_matter.authors[i].orcidID;
+        var author_name = front_matter.authors[i].author
         if (orcid_id) {
           var a = $('<a></a>');
           a.attr('href', 'https://orcid.org/' + orcid_id);
           var img = $('<img></img>');
           img.addClass('orcid-id');
-          img.attr('alt', 'ORCID ID');
+          img.attr('alt', author_name ? 'ORCID ID for ' + author_name : 'ORCID ID');
           img.attr('src','data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg==');
           a.append(img);
           $(this).append(a);
@@ -1263,7 +1287,22 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
       // hoverable references
       $('span.citation[data-cites]').each(function() {
-        var refHtml = $('#ref-' + $(this).attr('data-cites')).html();
+        const citeChild = $(this).children()[0]
+        // Do not process if @xyz has been used without escaping and without bibliography activated
+        // https://github.com/rstudio/distill/issues/466
+        if (citeChild === undefined) return true
+
+        if (citeChild.nodeName == "D-FOOTNOTE") {
+          var fn = citeChild
+          $(this).html(fn.shadowRoot.querySelector("sup"))
+          $(this).id = fn.id
+          fn.remove()
+        }
+        var refs = $(this).attr('data-cites').split(" ");
+        var refHtml = refs.map(function(ref) {
+          // Could use CSS.escape too here, we insure backward compatibility in navigator
+          return "<p>" + $('div[id="ref-' + ref + '"]').html() + "</p>";
+        }).join("\n");
         window.tippy(this, {
           allowHTML: true,
           content: refHtml,
@@ -1274,6 +1313,31 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
           placement: 'bottom-start'
         });
       });
+
+      // fix footnotes in tables (#411)
+      // replacing broken distill.pub feature
+      $('table d-footnote').each(function() {
+        // we replace internal showAtNode methode which is triggered when hovering a footnote
+        this.hoverBox.showAtNode = function(node) {
+          // ported from https://github.com/distillpub/template/pull/105/files
+          calcOffset = function(elem) {
+              let x = elem.offsetLeft;
+              let y = elem.offsetTop;
+              // Traverse upwards until an `absolute` element is found or `elem`
+              // becomes null.
+              while (elem = elem.offsetParent && elem.style.position != 'absolute') {
+                  x += elem.offsetLeft;
+                  y += elem.offsetTop;
+              }
+
+              return { left: x, top: y };
+          }
+          // https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/offsetTop
+          const bbox = node.getBoundingClientRect();
+          const offset = calcOffset(node);
+          this.show([offset.left + bbox.width, offset.top + bbox.height]);
+        }
+      })
 
       // clear polling timer
       clearInterval(tid);
@@ -1373,6 +1437,8 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     // mark non-body figures created by knitr chunks as 100% width
     $('.layout-chunk').each(function(i, val) {
       var figures = $(this).find('img, .html-widget');
+      // ignore leaflet img layers (#106)
+      figures = figures.filter(':not(img[class*="leaflet"])')
       if ($(this).attr('data-layout') !== "l-body") {
         figures.css('width', '100%');
       } else {
@@ -1395,7 +1461,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     // get rid of index.html references in header
     if (window.location.protocol !== "file:") {
       $('.distill-site-header a[href]').each(function(i,val) {
-        $(this).attr('href', $(this).attr('href').replace("index.html", "./"));
+        $(this).attr('href', $(this).attr('href').replace(/^index[.]html/, "./"));
       });
     }
 
@@ -1434,7 +1500,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </script>
 
   <!--/radix_placeholder_distill-->
-  <script src="exploratory-analysis-of-juvenile-snowshoe-hares-in-bonanza-creek-experimental-forest_files/header-attrs-2.25/header-attrs.js"></script>
+  <script src="exploratory-analysis-of-juvenile-snowshoe-hares-in-bonanza-creek-experimental-forest_files/header-attrs-2.27/header-attrs.js"></script>
   <script src="exploratory-analysis-of-juvenile-snowshoe-hares-in-bonanza-creek-experimental-forest_files/kePrint-0.0.1/kePrint.js"></script>
   <link href="exploratory-analysis-of-juvenile-snowshoe-hares-in-bonanza-creek-experimental-forest_files/lightable-0.0.1/lightable.css" rel="stylesheet" />
   <script src="exploratory-analysis-of-juvenile-snowshoe-hares-in-bonanza-creek-experimental-forest_files/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -1457,7 +1523,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <!--radix_placeholder_front_matter-->
 
 <script id="distill-front-matter" type="text/json">
-{"title":"Exploratory Analysis of Juvenile Snowshoe Hares in Bonanza Creek Experimental Forest","description":"In this analysis, I explored the data from a capture-recapture study of juvenile snowshoe hares (Lepus americanus) conducted in the Bonanza Creek Experimental Forest between 1999 and 2012. The study aimed to investigate trends in hare population over time, compare the weights of male and female juveniles using two-sample t-tests and Cohen’s d for effect size, and examine the relationship between their weight and hind foot length through simple linear regression analysis.","authors":[{"author":"Mariano Viz","authorURL":{},"affiliation":"&nbsp;","affiliationURL":"#","orcidID":""}],"publishedDate":"2021-11-16T00:00:00.000+00:00","citationText":"Viz, 2021"}
+{"title":"Exploratory Analysis of Juvenile Snowshoe Hares in Bonanza Creek Experimental Forest","description":"In this analysis, I explored the data from a capture-recapture study of juvenile snowshoe hares (Lepus americanus) conducted in the Bonanza Creek Experimental Forest between 1999 and 2012. The study aimed to investigate trends in hare population over time, compare the weights of male and female juveniles using two-sample t-tests and Cohen’s d for effect size, and examine the relationship between their weight and hind foot length through simple linear regression analysis.","authors":[{"author":"Mariano Viz","authorURL":{},"affiliation":"&nbsp;","affiliationURL":"#","orcidID":""}],"publishedDate":"2021-11-16T00:00:00.000-03:00","citationText":"Viz, 2021"}
 </script>
 
 <!--/radix_placeholder_front_matter-->
@@ -1468,15 +1534,10 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
 <div class="d-title">
 <h1>Exploratory Analysis of Juvenile Snowshoe Hares in Bonanza Creek Experimental Forest</h1>
+
 <!--radix_placeholder_categories-->
 <!--/radix_placeholder_categories-->
-<p><p>In this analysis, I explored the data from a capture-recapture
-study of juvenile snowshoe hares (Lepus americanus) conducted in the
-Bonanza Creek Experimental Forest between 1999 and 2012. The study aimed
-to investigate trends in hare population over time, compare the weights
-of male and female juveniles using two-sample t-tests and Cohen’s d for
-effect size, and examine the relationship between their weight and hind
-foot length through simple linear regression analysis.</p></p>
+<p><p>In this analysis, I explored the data from a capture-recapture study of juvenile snowshoe hares (Lepus americanus) conducted in the Bonanza Creek Experimental Forest between 1999 and 2012. The study aimed to investigate trends in hare population over time, compare the weights of male and female juveniles using two-sample t-tests and Cohen’s d for effect size, and examine the relationship between their weight and hind foot length through simple linear regression analysis.</p></p>
 </div>
 
 <div class="d-byline">
@@ -1487,38 +1548,18 @@ foot length through simple linear regression analysis.</p></p>
 
 <div class="d-article">
 <h3 id="introduction">1. Introduction</h3>
-<p>This report provides an exploratory analysis of juvenile snowshoe
-hare (Lepus americanus) surveyed in a capture-recapture study conducted
-in the Bonanza Creek Experimental Forest from 1999 to 2012 (Kielland et
-al. 2017). Specifically, this report presents: an exploration of the
-total number of juvenile snowshoe hares sampled by year in the Bonanza
-Creek Experimental Forest (1999-2012); a comparison of weights for
-juvenile male and female snowshoe hares; finally, an analysis of the
-relationship between juvenile weight and hind foot length.</p>
+<p>This report provides an exploratory analysis of juvenile snowshoe hare (Lepus americanus) surveyed in a capture-recapture study conducted in the Bonanza Creek Experimental Forest from 1999 to 2012 (Kielland et al. 2017).
+Specifically, this report presents: an exploration of the total number of juvenile snowshoe hares sampled by year in the Bonanza Creek Experimental Forest (1999-2012); a comparison of weights for juvenile male and female snowshoe hares; finally, an analysis of the relationship between juvenile weight and hind foot length.</p>
 <h3 id="data-and-analyses">2. Data and analyses</h3>
-<p>Snowshoe hare data was collected and made available by Dr. Knut
-Kielland and colleges at the Bonanza Creek Long Term Ecological Research
-Station in Alaska. The data contains 3197 observations from
-capture-recapture studies of snowshoe hares, conducted from 1999 to
-2012. Following exploratory data visualization, juvenile male and female
-snowshoe hares weights were compared by a two-sample t-tests
-(significance level (<span class="math inline">\(\alpha\)</span>) of
-0.05) and differences between groups were described by Cohen’s
-<em>d</em> effect size. Finally, the relationship between juvenile
-snowshoe hare weight and hind foot length was explored by simple linear
-regression. All analyses are in R version 4.0.2 using RStudio version
-1.3.1056.</p>
+<p>Snowshoe hare data was collected and made available by Dr. Knut Kielland and colleges at the Bonanza Creek Long Term Ecological Research Station in Alaska. The data contains 3197 observations from capture-recapture studies of snowshoe hares, conducted from 1999 to 2012. Following exploratory data visualization, juvenile male and female snowshoe hares weights were compared by a two-sample t-tests (significance level (<span class="math inline">\(\alpha\)</span>) of 0.05) and differences between groups were described by Cohen’s <em>d</em> effect size. Finally, the relationship between juvenile snowshoe hare weight and hind foot length was explored by simple linear regression.
+All analyses are in R version 4.0.2 using RStudio version 1.3.1056.</p>
 <h3 id="exploratory-findings">3. Exploratory findings</h3>
-<h4 id="a.-annual-juvenile-snowshoe-hare-trap-counts">A. Annual juvenile
-snowshoe hare trap counts</h4>
+<h4 id="a.-annual-juvenile-snowshoe-hare-trap-counts">A. Annual juvenile snowshoe hare trap counts</h4>
 <div class="layout-chunk" data-layout="l-body">
 <p><img src="exploratory-analysis-of-juvenile-snowshoe-hares-in-bonanza-creek-experimental-forest_files/figure-html5/unnamed-chunk-1-1.png" width="624" /></p>
 </div>
-<p><strong>Figure 1.</strong> Total number of juvenile snowshoe hare
-(observed via trap capture) by year.</p>
-<strong>Table 1.</strong> Descriptive statistics (mean, median, minimum
-and maximum counts) for annual counts of juvenile snowshoe hare
-trappings. Data: Kielland et al. (2017).
+<p><strong>Figure 1.</strong> Total number of juvenile snowshoe hare (observed via trap capture) by year.</p>
+<p><strong>Table 1.</strong> Descriptive statistics (mean, median, minimum and maximum counts) for annual counts of juvenile snowshoe hare trappings. Data: Kielland et al. (2017).</p>
 <div class="layout-chunk" data-layout="l-body">
 <table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
@@ -1558,36 +1599,15 @@ Minimum Count
 <div class="layout-chunk" data-layout="l-body">
 
 </div>
-<p>Juvenile snowshoe hare (observed via trap capture) were counted by
-year. The minimum and maximum counts of juvenile hare trappings were 2
-and 126 respectively. The mean annual number of juvenile hares trapped
-was 31.5 with a median annual number of 18.5 (Table 1, Figure 1). There
-is an overall decline in the annual counts of juvenile snowshoe hare for
-the period 1999-2012. However, the number of days and traps in the study
-were not standardized for each year, limiting the utility of this
-methodology for accurately estimating the juvenile hare population.</p>
-<h4 id="b.-juvenile-snowshoe-hare-weights-comparison-by-sex-and-site">B.
-Juvenile snowshoe hare weights comparison by sex and site</h4>
+<p>Juvenile snowshoe hare (observed via trap capture) were counted by year. The minimum and maximum counts of juvenile hare trappings were 2 and 126 respectively. The mean annual number of juvenile hares trapped was 31.5 with a median annual number of 18.5 (Table 1, Figure 1). There is an overall decline in the annual counts of juvenile snowshoe hare for the period 1999-2012. However, the number of days and traps in the study were not standardized for each year, limiting the utility of this methodology for accurately estimating the juvenile hare population.</p>
+<h4 id="b.-juvenile-snowshoe-hare-weights-comparison-by-sex-and-site">B. Juvenile snowshoe hare weights comparison by sex and site</h4>
 <div class="layout-chunk" data-layout="l-body">
 <p><img src="exploratory-analysis-of-juvenile-snowshoe-hares-in-bonanza-creek-experimental-forest_files/figure-html5/unnamed-chunk-3-1.png" width="624" /></p>
 </div>
-<p><strong>Figure 2.</strong> Weight (g) for juvenile snowshoe hare by
-sex and site (Bonanza Black Spruce, Bonanza Mature, and Bonanza
-Riparian). Gold (female), teal (male) and coral (NA) points indicate
-individual observations for weight (grams) of juvenile snowshoe hare.
-Box endpoints indicate the 25<sup>th</sup> and 75<sup>th</sup>
-percentile values. The black line and black point within the box
-indicate the weights median and mean value respectively. Data: Kielland
-et al. (2017).</p>
-<h4 id="c.-juvenile-hare-mean-weights-comparison-by-sex">C. Juvenile
-hare mean weights comparison by sex</h4>
-<p>Distributions of weights (plots not included) for juvenile male and
-female snowshoe hares were relatively normal and symmetric (bell-shaped
-histogram and quantile-quantile plot with an almost linear
-relationship).</p>
-<p><strong>Table 2.</strong> Descriptive statistics (mean, standard
-deviation, and sample size) for weights (g) of juvenile snowshoe hare
-trappings by sex. Data: Kielland et al. (2017).</p>
+<p><strong>Figure 2.</strong> Weight (g) for juvenile snowshoe hare by sex and site (Bonanza Black Spruce, Bonanza Mature, and Bonanza Riparian). Gold (female), teal (male) and coral (NA) points indicate individual observations for weight (grams) of juvenile snowshoe hare. Box endpoints indicate the 25<sup>th</sup> and 75<sup>th</sup> percentile values. The black line and black point within the box indicate the weights median and mean value respectively. Data: Kielland et al. (2017).</p>
+<h4 id="c.-juvenile-hare-mean-weights-comparison-by-sex">C. Juvenile hare mean weights comparison by sex</h4>
+<p>Distributions of weights (plots not included) for juvenile male and female snowshoe hares were relatively normal and symmetric (bell-shaped histogram and quantile-quantile plot with an almost linear relationship).</p>
+<p><strong>Table 2.</strong> Descriptive statistics (mean, standard deviation, and sample size) for weights (g) of juvenile snowshoe hare trappings by sex. Data: Kielland et al. (2017).</p>
 <div class="layout-chunk" data-layout="l-body">
 <table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
@@ -1641,76 +1661,28 @@ m
 <div class="layout-chunk" data-layout="l-body">
 
 </div>
-<p>On average, juvenile snowshoe hare males weight slightly more than
-female juvenile snowshoe hares (945.86 <span
-class="math inline">\(\pm\)</span> 333.22 and 855.39 <span
-class="math inline">\(\pm\)</span> 292.25 g, respectively; mean <span
-class="math inline">\(\pm\)</span> 1 standard deviation). The absolute
-difference in means is 90.47 g (a 10.05% difference). The effect size is
-small (Cohen’s <em>d</em> = 0.29) and the difference in means is
-significant (Welch two-sample t-test: t(325.02) = 2.71, p &lt;
-0.001).</p>
-<h4
-id="d.-relationship-between-juvenile-snowshoe-hare-weight-hind-foot-length">D.
-Relationship between juvenile snowshoe hare weight &amp; hind foot
-length</h4>
-<p>The relationship between hind foot length (mm) and weight (g) was
-explored for juvenile snowshoe hares by simple lineal regression.
-Additional variables as sex or sites were not included in the
-analysis.</p>
+<p>On average, juvenile snowshoe hare males weight slightly more than female juvenile snowshoe hares (945.86 <span class="math inline">\(\pm\)</span> 333.22 and 855.39 <span class="math inline">\(\pm\)</span> 292.25 g, respectively; mean <span class="math inline">\(\pm\)</span> 1 standard deviation).
+The absolute difference in means is 90.47 g (a 10.05% difference).
+The effect size is small (Cohen’s <em>d</em> = 0.29) and the difference in means is significant (Welch two-sample t-test: t(325.02) = 2.71, p &lt; 0.001).</p>
+<h4 id="d.-relationship-between-juvenile-snowshoe-hare-weight-hind-foot-length">D. Relationship between juvenile snowshoe hare weight &amp; hind foot length</h4>
+<p>The relationship between hind foot length (mm) and weight (g) was explored for juvenile snowshoe hares by simple lineal regression. Additional variables as sex or sites were not included in the analysis.</p>
 <div class="layout-chunk" data-layout="l-body">
 <p><img src="exploratory-analysis-of-juvenile-snowshoe-hares-in-bonanza-creek-experimental-forest_files/figure-html5/unnamed-chunk-7-1.png" width="624" /></p>
 </div>
-<p><strong>Figure 3.</strong> Relationship between hind foot length (mm)
-and weight (g) for juvenile snowshoe hares. Points indicate individual
-juvenile snowshoe hare measurements. Linear model summary: <span
-class="math inline">\(\beta\)</span><sub>1</sub> = 9.52 g
-mm<sup>-1</sup>, p &lt; 0.001, R<sup>2</sup> = 0.3, Pearson’s <em>r</em>
-= 0.55). An equation of this linear model is also displayed in the plot
-panel. Data: Kielland et al. (2017).</p>
-<p>The relationship between hind foot length (mm) and weight (g) for
-juvenile snowshoe hares appears relatively linear (Figure 3). Simple
-linear regression showed that hind foot length is not a strong predictor
-of juvenile snowshoe hares weight (p &lt; 0.001, R<sup>2</sup> = 0.3);
-i.e., only 29.88% of the variance in weight is predictable from the hind
-foot length. The average slope is <span
-class="math inline">\(\beta\)</span> = 9.52 g mm<sup>-1</sup>; meaning
-that, on average, we expect weight to increase by 9.52grams for each one
-millimeter increase in hind foot length. Hind foot length and weight are
-moderately, and significantly, positively correlated (Pearson’s
-<em>r</em> = 0.55, p &lt; 0.001). Diagnostic plots (not included) reveal
-normally distributed (with a slight skew to the right) residuals.The
-heteroscedasticity of residuals shown in these plots is a major concern.
-Linear regression assumes that all residuals are drawn from a population
-that has a constant variance of the error (homoscedasticity);
-heteroscedasticity can decrease the predictive capacity of the linear
-model by underestimating or overestimating uncertainty.</p>
+<p><strong>Figure 3.</strong> Relationship between hind foot length (mm) and weight (g) for juvenile snowshoe hares. Points indicate individual juvenile snowshoe hare measurements. Linear model summary: <span class="math inline">\(\beta\)</span><sub>1</sub> = 9.52 g mm<sup>-1</sup>, p &lt; 0.001, R<sup>2</sup> = 0.3, Pearson’s <em>r</em> = 0.55). An equation of this linear model is also displayed in the plot panel. Data: Kielland et al. (2017).</p>
+<p>The relationship between hind foot length (mm) and weight (g) for juvenile snowshoe hares appears relatively linear (Figure 3). Simple linear regression showed that hind foot length is not a strong predictor of juvenile snowshoe hares weight (p &lt; 0.001, R<sup>2</sup> = 0.3); i.e., only 29.88% of the variance in weight is predictable from the hind foot length. The average slope is <span class="math inline">\(\beta\)</span> = 9.52 g mm<sup>-1</sup>; meaning that, on average, we expect weight to increase by 9.52grams for each one millimeter increase in hind foot length. Hind foot length and weight are moderately, and significantly, positively correlated (Pearson’s <em>r</em> = 0.55, p &lt; 0.001).
+Diagnostic plots (not included) reveal normally distributed (with a slight skew to the right) residuals.The heteroscedasticity of residuals shown in these plots is a major concern. Linear regression assumes that all residuals are drawn from a population that has a constant variance of the error (homoscedasticity); heteroscedasticity can decrease the predictive capacity of the linear model by underestimating or overestimating uncertainty.</p>
 <h2 id="summary">Summary</h2>
 <p>Juvenile hares data exploration reveals the following findings:</p>
 <ul>
-<li><p>There is a decrease in the observations of juvenile snowshoe
-hares (observed via trap capture) from 1999 to 2012. However, as the
-number of days and traps in each year of the study were not standardized
-it is difficult to accurately estimate the real variation in the
-juvenile hare population.</p></li>
-<li><p>Juvenile snowshoe hare males weight, on average, slightly more
-than female juvenile snowshoe hares. The difference in means is
-significant but the effect size is small (Cohen’s <em>d</em> =
-0.29).</p></li>
-<li><p>The linear regression exploration of the relationship between
-hind foot length and weight for juvenile snowshoe hares revealed that
-hind foot length is not a strong predictor of weight (p &lt; 0.001,
-R<sup>2</sup> = 0.3). At the same time, the observed heteroscedasticity
-of residuals weakens the predictive capacity of this model.</p></li>
+<li><p>There is a decrease in the observations of juvenile snowshoe hares (observed via trap capture) from 1999 to 2012. However, as the number of days and traps in each year of the study were not standardized it is difficult to accurately estimate the real variation in the juvenile hare population.</p></li>
+<li><p>Juvenile snowshoe hare males weight, on average, slightly more than female juvenile snowshoe hares. The difference in means is significant but the effect size is small (Cohen’s <em>d</em> = 0.29).</p></li>
+<li><p>The linear regression exploration of the relationship between hind foot length and weight for juvenile snowshoe hares revealed that hind foot length is not a strong predictor of weight (p &lt; 0.001, R<sup>2</sup> = 0.3). At the same time, the observed heteroscedasticity of residuals weakens the predictive capacity of this model.</p></li>
 </ul>
 <h2 id="citations">Citations</h2>
-<p>Kielland, K., F.S. Chapin, R.W. Ruess, and Bonanza Creek LTER.
-2017.Snowshoe hare physical data in Bonanza Creek Experimental Forest:
-1999-Present ver 22. Environmental Data Initiative. <a
-href="https://doi.org/10.6073/pasta/03dce4856d79b91557d8e6ce2cbcdc14"
-class="uri">https://doi.org/10.6073/pasta/03dce4856d79b91557d8e6ce2cbcdc14</a></p>
-<div class="sourceCode" id="cb1"><pre
-class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<p>Kielland, K., F.S. Chapin, R.W. Ruess, and Bonanza Creek LTER. 2017.Snowshoe hare physical data in Bonanza Creek Experimental Forest: 1999-Present ver 22. Environmental Data Initiative.
+<a href="https://doi.org/10.6073/pasta/03dce4856d79b91557d8e6ce2cbcdc14" class="uri">https://doi.org/10.6073/pasta/03dce4856d79b91557d8e6ce2cbcdc14</a></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>

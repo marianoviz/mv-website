@@ -67,6 +67,7 @@ ggplot(data = bon_juv_counts, aes(x = year, y = n)) +
 **Figure 1.** Total number of juvenile snowshoe hare (observed via trap capture) by year.
 
 **Table 1.** Descriptive statistics (mean, median, minimum and maximum counts) for annual counts of juvenile snowshoe hare trappings. Data: Kielland et al. (2017).
+
 ```{r}
 #Summary statistics for juv hare annual counts
 bon_juv_counts_sum <- bon_juv_counts %>%
