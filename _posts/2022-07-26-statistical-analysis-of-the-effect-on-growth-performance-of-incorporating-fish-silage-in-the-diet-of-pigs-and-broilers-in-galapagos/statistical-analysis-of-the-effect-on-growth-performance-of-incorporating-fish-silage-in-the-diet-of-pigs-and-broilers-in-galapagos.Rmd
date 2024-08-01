@@ -79,15 +79,6 @@ No detailed statistical analyses were performed for this trial. The limited numb
 
 <p>&nbsp;</p>
 
-```{r}
-knitr::include_graphics("/Users/marianoviz/Desktop/R Projects and Stuff/ESM 244 Rstudio Work/mv-website/_posts/2022-07-26-statistical-analysis-of-the-effect-on-growth-performance-of-incorporating-fish-silage-in-the-diet-of-pigs-and-broilers-in-galapagos/pigs.png")
-
-
-```
-
-
-Pigs trial - Galapagos April 2022 | Credit: Luis García Granda
-
 <p>&nbsp;</p>
 
 
@@ -525,6 +516,8 @@ meat_test %>%
 
 <p>&nbsp;</p>
 
+
+
 The results deviate slightly from those expected due to chance if there were no distinguishable differences between the samples. However, according to Lawless and Heymann (2010), these differences are not enough to establish statistically significant differences. When asked, the panelists said that they had not noticed any unusual flavors in the samples tested.
 
 
@@ -533,19 +526,6 @@ The results deviate slightly from those expected due to chance if there were no 
 
 The trial in broilers was carried out between the months of April and May 2022 on a farm located in the Santa Rosa parish, Santa Cruz, Galapagos province. Ninety-six, day-old broilers (Cobb 500) of either sex were randomized into three treatment groups with two replicates in each group (16 chicks per replicate). The dietary treatments were a control diet (T1), a diet containing 6% FS (T2), and a diet containing 12% FS (T3). The evaluation period was 46 days. Animals remained in facilities according to what was detailed in the experimental design (Annex 1) and the characteristics evaluated were: feed intake, SF intake, weight gain, and feed conversion ratio (FCR).
 
-<p>&nbsp;</p>
-
-```{r}
-knitr::include_graphics("/Users/marianoviz/Desktop/R Projects and Stuff/ESM 244 Rstudio Work/mv-website/_posts/2022-07-26-statistical-analysis-of-the-effect-on-growth-performance-of-incorporating-fish-silage-in-the-diet-of-pigs-and-broilers-in-galapagos/pollos.png")
-
-
-```
-
-
-
-
-
-Broilers trial - Galapagos January 2022 | Credit: Luis García Granda
 
 <p>&nbsp;</p>
 
@@ -1281,8 +1261,32 @@ Exploratory data analysis and interpretation of trial results reveal the followi
 
 - The trial with pigs showed that FS can be successfully used in Galapagos pig production as a feed supplement, achieving similar yields to those obtained with available commercial feeds and without imparting an undesirable flavor to the meat.
 
+
+
+```{r}
+
+knitr::include_graphics("/Users/marianoviz/Desktop/R Projects and Stuff/ESM 244 Rstudio Work/mv-website/_posts/2022-07-26-statistical-analysis-of-the-effect-on-growth-performance-of-incorporating-fish-silage-in-the-diet-of-pigs-and-broilers-in-galapagos/pigs.png")
+
+
+```
+
+Pigs trial - Galapagos April 2022 | Credit: Luis García Granda
+
+
+
+
 - The trial with broilers confirmed what was observed in the trial with pigs and also revealed statistically significant differences between the groups evaluated. Of the three dietary treatments considered, the group fed 12% FS (T3) showed the highest average daily weight gain and the lowest FCR.
 
+
+
+```{r}
+knitr::include_graphics("/Users/marianoviz/Desktop/R Projects and Stuff/ESM 244 Rstudio Work/mv-website/_posts/2022-07-26-statistical-analysis-of-the-effect-on-growth-performance-of-incorporating-fish-silage-in-the-diet-of-pigs-and-broilers-in-galapagos/pollos.png")
+
+
+```
+
+
+Broilers trial - Galapagos January 2022 | Credit: Luis García Granda
 
 
 <p>&nbsp;</p>
