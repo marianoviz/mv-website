@@ -2,8 +2,8 @@
 title: CV
 name: Mariano
 surname: Viz
-position: "Graduate Student"
-address: "Bren School of Environmental Science & Management"
+position: "Impact-Driven Conservationist | Environmental Consultant | Specialist in Impact Evaluation & Conservation Program Analysis"
+address: "Bren School of Environmental Science & Management, University of California Santa Barbara (UCSB)"
 phone: +1 805 868 303
 email: "mviz@bren.ucsb.edu"
 github: marianoviz
